@@ -91,3 +91,17 @@ Security/behavior tests cover encryption/tampering, salt and pepper, role bounda
 Budgets: logo ≤80 KB, menu image ≤350 KB, public client ≤30 KB gzip, combined admin JS ≤90 KB gzip. Image uploads are optimized before storage (500 KB maximum), with backend type/size validation. Images below the fold lazy-load and reserve dimensions; the hero is eager-loaded. Convex subscriptions replace periodic polling.
 
 See `IMAGE_PROMPTS.md` for the built-in image-generation prompts and final asset mapping.
+
+## 50-order concurrency target
+
+The application targets at least 50 simultaneous active pickup orders. Active orders are queried by status separately from completed history, so 250 newer collected orders cannot push the active queue off either board. Queries allow up to 200 preparing and 200 ready orders; staff views include these plus recent history.
+
+Toast webhook events are persisted before acknowledgment, deduplicated, and scheduled at 250 ms intervals (four imports per second nominally). A 50-event burst is queued instead of issuing 50 outbound API requests together. Token refresh uses one database lease; the encrypted token is reused until near expiry. Authentication failures cannot trigger an authentication storm. HTTP 429 responses pause new import work using Toast's Retry-After interval. Processing latency depends on Toast responses and scheduler availability, not just slot timing.
+
+The capacity suite uses simulated Toast responses and tests 50 unique orders plus duplicate deliveries, one authentication request, 50 concurrent board reads, 50 Ready updates, 50 Collected updates, private-name decryption, and preservation of active orders behind 250 historical records. These are application tests, not a measured production SLA or a live Toast payment/POS load test. The latter remains an activation requirement once credentials are available.
+
+Public name requests are coalesced during bursts and cached in memory, so status-only changes do not repeat the name-decryption action for every connected customer.
+
+References: [Toast rate limits](https://doc.toasttab.com/doc/devguide/apiRateLimiting.html), [authentication-token reuse](https://doc.toasttab.com/doc/devguide/apiAuthenticationRateLimit.html).
+
+A separate live development-backend probe also passed on September 29, 2026: 50 concurrent webhook enqueue operations, 50 order writes, 50 parallel board reads, and 100 employee status updates completed successfully in one run. The measured backend sequence took 2.406 seconds; this excludes Toast requests, customer payment time, and browser rendering and is not a production latency guarantee. The probe used temporary encrypted test orders and removed its data, employee session, and temporary probe functions afterward. No production order records were created.

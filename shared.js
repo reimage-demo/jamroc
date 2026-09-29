@@ -276,27 +276,41 @@ async function connect() {
       );
     }
     if (page === "status") {
-      let generation = 0;
-      client.onUpdate(
-        "orders:board",
-        {},
-        async (rows) => {
-          board = rows;
-          const current = ++generation;
-          renderBoard();
-          $("#board-connection").textContent = "Live pickup updates";
+      let nameTimer;
+      let namesInFlight = false;
+      function refreshMissingNames() {
+        clearTimeout(nameTimer);
+        if (!board.some((o) => !names[o._id])) return;
+        nameTimer = setTimeout(async () => {
+          if (namesInFlight) return;
+          namesInFlight = true;
+          let successful = false;
           try {
             const result = await client.action("customerData:boardNames", {});
-            if (current !== generation) return;
-            names = Object.fromEntries(result.map((n) => [n.id, n.firstName]));
+            for (const entry of result) names[entry.id] = entry.firstName;
+            successful = true;
             renderBoard();
           } catch {
             connectionError();
+          } finally {
+            namesInFlight = false;
+            if (successful) refreshMissingNames();
           }
+        }, 250);
+      }
+      client.onUpdate(
+        "orders:board",
+        {},
+        (rows) => {
+          board = rows;
+          renderBoard();
+          $("#board-connection").textContent = "Live pickup updates";
+          refreshMissingNames();
         },
         connectionError,
       );
     }
+
     window.addEventListener("offline", connectionError);
     window.addEventListener("online", () => {
       if ($("#board-connection"))

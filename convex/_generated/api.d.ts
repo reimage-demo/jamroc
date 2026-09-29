@@ -19,6 +19,7 @@ import type * as menu from "../menu.js";
 import type * as orders from "../orders.js";
 import type * as settings from "../settings.js";
 import type * as toast from "../toast.js";
+import type * as toastAccess from "../toastAccess.js";
 import type * as webhooks from "../webhooks.js";
 
 import type {
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   orders: typeof orders;
   settings: typeof settings;
   toast: typeof toast;
+  toastAccess: typeof toastAccess;
   webhooks: typeof webhooks;
 }>;
 

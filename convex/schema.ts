@@ -91,7 +91,8 @@ export default defineSchema({
   })
     .index("by_toast", ["toastGuid"])
     .index("by_created", ["createdAt"])
-    .index("by_status", ["status"]),
+    .index("by_status", ["status"])
+    .index("by_status_created", ["status", "createdAt"]),
   orderEvents: defineTable({
     orderId: v.id("orders"),
     userId: v.id("users"),
@@ -99,6 +100,16 @@ export default defineSchema({
     to: status,
     createdAt: v.number(),
   }).index("by_order", ["orderId"]),
+  toastAccess: defineTable({
+    key: v.string(),
+    nextRequestAt: v.number(),
+    pausedUntil: v.optional(v.number()),
+    tokenCipher: v.optional(v.string()),
+    expiresAt: v.optional(v.number()),
+    refreshOwner: v.optional(v.string()),
+    refreshUntil: v.optional(v.number()),
+    lastRefreshAt: v.optional(v.number()),
+  }).index("by_key", ["key"]),
   webhookEvents: defineTable({
     eventId: v.string(),
     orderGuid: v.string(),

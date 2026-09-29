@@ -23,17 +23,19 @@ export function publicOrder(o: any) {
   };
 }
 async function active(ctx: any) {
-  const rows = await ctx.db
-    .query("orders")
-    .withIndex("by_created")
-    .order("desc")
-    .take(200);
-  return rows.filter(
-    (o: any) =>
-      o.paymentState === "paid" &&
-      ["preparing", "ready"].includes(o.status) &&
-      o.createdAt > Date.now() - 24 * 60 * 60 * 1000,
+  const groups = await Promise.all(
+    ["preparing", "ready"].map((status) =>
+      ctx.db
+        .query("orders")
+        .withIndex("by_status_created", (q: any) => q.eq("status", status))
+        .order("asc")
+        .take(200),
+    ),
   );
+  return groups
+    .flat()
+    .filter((o: any) => o.paymentState === "paid")
+    .sort((a: any, b: any) => a.createdAt - b.createdAt);
 }
 export const board = query({
   args: {},
@@ -47,17 +49,20 @@ export const staffList = query({
   args: { token: v.string() },
   handler: async (ctx, { token }) => {
     await requireStaff(ctx, token);
-    return (
-      await ctx.db
-        .query("orders")
-        .withIndex("by_created")
-        .order("desc")
-        .take(200)
-    ).map((o) => ({
-      ...publicOrder(o),
-      items: o.items,
-      paymentState: o.paymentState,
-    }));
+    const pending = await active(ctx);
+    const recent = await ctx.db
+      .query("orders")
+      .withIndex("by_created")
+      .order("desc")
+      .take(200);
+    const unique = new Map([...recent, ...pending].map((o) => [o._id, o]));
+    return [...unique.values()]
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .map((o) => ({
+        ...publicOrder(o),
+        items: o.items,
+        paymentState: o.paymentState,
+      }));
   },
 });
 export const detailInternal = internalQuery({
