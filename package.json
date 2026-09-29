@@ -1,0 +1,28 @@
+{
+  "name": "jamroc",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "convex:dev": "convex dev",
+    "convex:deploy": "convex deploy",
+    "public:build": "esbuild scripts/convex-browser-entry.js --bundle --minify --format=iife --target=es2020 --outfile=vendor/convex-client.js && node scripts/build-public.mjs",
+    "admin:dev": "npm --prefix admin-portal run dev",
+    "admin:build": "npm --prefix admin-portal run build",
+    "test": "vitest run",
+    "check": "tsc --noEmit -p convex && npm test && npm run public:build && npm run admin:build && node scripts/check-performance.mjs",
+    "images:optimize": "node scripts/optimize-images.mjs"
+  },
+  "dependencies": {
+    "convex": "^1.31.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "convex-test": "^0.0.38",
+    "esbuild": "^0.25.0",
+    "sharp": "^0.34.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  }
+}

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env*
+!.env.example
+.DS_Store
+admin-portal/
+.convex/
+assets/images/menu/*.png
+assets/brand/logo-original.png
+coverage/
