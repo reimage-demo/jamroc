@@ -85,7 +85,7 @@ function imageUrl(value) {
 }
 function card(item, featured = false) {
   const image = imageUrl(item.imageUrl);
-  return `<button class="food-card" data-item="${esc(item.slug)}" aria-label="View ${esc(item.name)}"><div class="food-photo">${image ? `<img src="${esc(image)}" width="600" height="450" loading="lazy" decoding="async" alt="${esc(item.name)}">` : ""}</div><div class="food-info">${featured ? `<p class="eyebrow">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name || "FROM OUR KITCHEN")}</p>` : ""}<h3>${esc(item.name)}</h3><p>${esc(item.description)}</p><div class="price"><span>${item.isAvailable ? money(item.price) : "Currently unavailable"}</span><span class="round-arrow" aria-hidden="true">↗</span></div></div></button>`;
+  return `<button class="food-card" data-item="${esc(item.slug)}" aria-label="View ${esc(item.name)}"><div class="food-photo">${image ? `<img src="${esc(image)}" width="600" height="450" loading="lazy" decoding="async" alt="${esc(item.name)}">` : ""}</div><div class="food-info">${featured ? `<p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name || "FROM OUR KITCHEN")}</p>` : ""}<h3>${esc(item.name)}</h3><p>${esc(item.description)}</p><div class="price"><span>${item.isAvailable ? money(item.price) : "Currently unavailable"}</span><span class="item-link">View item</span></div></div></button>`;
 }
 function renderMenu() {
   if (page === "home") {
@@ -152,7 +152,7 @@ document.addEventListener("click", (e) => {
 function showItem(item) {
   if (!item) return;
   const d = $("#item-dialog");
-  d.innerHTML = `<button class="dialog-close" aria-label="Close">×</button>${imageUrl(item.imageUrl) ? `<img src="${esc(item.imageUrl)}" width="650" height="480" alt="${esc(item.name)}">` : ""}<div class="item-detail"><p class="eyebrow">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name)}</p><h2>${esc(item.name)}</h2><p>${esc(item.description)}</p><p><strong>${money(item.price)}</strong></p>${item.options?.length ? `<label>Preparation<select id="preparation">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<button class="button" id="add-pick" ${!item.isAvailable ? "disabled" : ""}>${item.isAvailable ? "Add to your picks" : "Currently unavailable"}</button><p class="muted">Save your favorites while you browse. Checkout takes place on Toast.</p>${item.illustrative ? '<p class="muted">Illustrative food photograph.</p>' : ""}</div>`;
+  d.innerHTML = `<button class="dialog-close" aria-label="Close">×</button>${imageUrl(item.imageUrl) ? `<img src="${esc(item.imageUrl)}" width="650" height="480" alt="${esc(item.name)}">` : ""}<div class="item-detail"><p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name)}</p><h2>${esc(item.name)}</h2><p>${esc(item.description)}</p><p><strong>${money(item.price)}</strong></p>${item.options?.length ? `<label>Preparation<select id="preparation">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<button class="button" id="add-pick" ${!item.isAvailable ? "disabled" : ""}>${item.isAvailable ? "Add to your picks" : "Currently unavailable"}</button><p class="muted">Save your favorites while you browse. Checkout takes place on Toast.</p>${item.illustrative ? '<p class="muted">Illustrative food photograph.</p>' : ""}</div>`;
   d.querySelector("#preparation")?.addEventListener("change", (e) => {
     const o = item.options.find((o) => o.name === e.target.value);
     if (imageUrl(o?.imageUrl)) d.querySelector("img").src = o.imageUrl;
@@ -216,7 +216,7 @@ function renderContact() {
       .map(([label, value]) => `<h3>${label}</h3><p>${esc(value)}</p>`)
       .join("") +
     (settings.instagram
-      ? `<a class="text-link" href="${esc(settings.instagram)}" target="_blank" rel="noopener noreferrer">Follow us on Instagram ↗</a>`
+      ? `<a class="text-link" href="${esc(settings.instagram)}" target="_blank" rel="noopener noreferrer">Follow us on Instagram</a>`
       : "");
 }
 function renderBoard() {
