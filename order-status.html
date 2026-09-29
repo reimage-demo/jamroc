@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f6ad2b" />
+    <meta
+      name="description"
+      content="Jam Roc Restaurant & Lounge. Jamaican classics, fresh seafood, food and drinks, and live pickup updates."
+    />
+    <title>Live pickup status | Jam Roc Restaurant & Lounge</title>
+    <link rel="icon" href="assets/brand/logo.webp" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="status">
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Jam Roc home"
+        ><img
+          src="assets/brand/logo.webp"
+          width="96"
+          height="80"
+          alt="Jam Roc Restaurant & Lounge"
+        /><span>JAM ROC<small>RESTAURANT & LOUNGE</small></span></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="index.html" data-nav="home">Home</a
+        ><a href="menu.html" data-nav="menu">Our menu</a
+        ><a href="order-status.html" data-nav="status">Order status</a
+        ><a href="contact.html" data-nav="contact">Visit us</a>
+      </nav>
+      <button class="button compact toast-order">
+        Order online <span aria-hidden="true">↗</span>
+      </button>
+    </header>
+    <main id="main">
+      <section class="page-heading status-heading">
+        <p class="eyebrow">THE PICKUP BOARD</p>
+        <h1>Good food.<br /><em>Almost yours.</em></h1>
+        <p>
+          Find your first name and order number. Come to the counter when your
+          order is ready.
+        </p>
+        <span class="connection" id="board-connection"
+          >Connecting to the pickup board…</span
+        >
+      </section>
+      <section class="status-columns">
+        <div class="status-column">
+          <div class="status-title">
+            <span class="status-icon">◷</span>
+            <h2>Preparing</h2>
+            <span id="preparing-count">0</span>
+          </div>
+          <div id="preparing-orders" class="board-list"></div>
+        </div>
+        <div class="status-column ready-column">
+          <div class="status-title">
+            <span class="status-icon">✓</span>
+            <h2>Ready for pickup</h2>
+            <span id="ready-count">0</span>
+          </div>
+          <div id="ready-orders" class="board-list"></div>
+        </div>
+      </section>
+      <p class="board-help">
+        Collected orders leave this board. Need a hand? Ask a member of our
+        team.
+      </p>
+    </main>
+    <footer>
+      <div class="footer-top">
+        <div>
+          <a class="footer-brand" href="index.html"
+            >JAM ROC<span>RESTAURANT & LOUNGE</span></a
+          >
+          <p>Island flavor. Good company.</p>
+        </div>
+        <div>
+          <a href="menu.html">Food & drinks</a
+          ><a href="order-status.html">Track your order</a
+          ><a href="contact.html">Visit us</a>
+        </div>
+        <div class="footer-note">Made to order.<br />Made to be enjoyed.</div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Jam Roc Restaurant & Lounge</span
+        ><span
+          >Illustrative food photography. Actual presentation may vary.</span
+        >
+      </div>
+    </footer>
+    <dialog id="ordering-dialog">
+      <button class="dialog-close" aria-label="Close">×</button>
+      <p class="eyebrow">ONLINE ORDERING</p>
+      <h2>A little more time.</h2>
+      <p>
+        Online ordering will be available here soon. In the meantime, explore
+        our food menu.
+      </p>
+      <a class="button" href="menu.html">Explore the menu</a>
+    </dialog>
+    <script src="public-config.js"></script>
+    <script src="vendor/convex-client.js" defer></script>
+    <script type="module" src="shared.js"></script>
+  </body>
+</html>
