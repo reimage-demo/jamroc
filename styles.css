@@ -1575,3 +1575,17 @@ dialog::backdrop {
   background: var(--paper);
   color: var(--ink);
 }
+
+.footer-credit {
+  max-width: 1296px;
+  margin: 18px auto 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--cream);
+}
+.footer-credit a {
+  display: inline-block;
+  padding: 8px 0;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
