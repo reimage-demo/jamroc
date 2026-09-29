@@ -6,7 +6,7 @@ Public HTML/CSS/browser JavaScript, a separate Vite/React staff portal, and a sh
 
 - Root: `jamroc` repository; public pages, assets, Convex, tests, scripts.
 - `admin-portal/`: independent `jamroc-admin` repository, excluded from the root repository.
-- Each repository publishes only built browser assets to its own `gh-pages` branch.
+- Each repository publishes only built browser assets to its own `gh-pages` branch. After building, run `node scripts/publish-pages.mjs` and `node scripts/publish-pages.mjs --admin` from the root to publish updates.
 - Public: https://reimage-demo.github.io/jamroc/
 - Staff: https://reimage-demo.github.io/jamroc-admin/
 

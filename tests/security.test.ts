@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { randomBytes, createHmac } from "node:crypto";
 import { convexTest } from "convex-test";
 import schema from "../convex/schema";
@@ -241,4 +241,26 @@ describe("webhook boundary", () => {
     const r = await t.fetch("/toast/webhook", { method: "POST", body: "{}" });
     expect(r.status).toBe(503);
   });
+});
+
+it("verifies Toast signatures before accepting a location", async () => {
+  vi.stubEnv("TOAST_ENABLED", "true");
+  vi.stubEnv("TOAST_WEBHOOK_SECRET", "test-secret");
+  vi.stubEnv("TOAST_RESTAURANT_GUID", "expected-location");
+  try {
+    const t = convexTest(schema, modules);
+    const event = { timestamp: new Date().toISOString(), eventType: "order_updated", details: { restaurantGuid: "wrong-location" } };
+    const body = JSON.stringify(event);
+    const bad = await t.fetch("/toast/webhook", {method:"POST", body, headers:{"Toast-Signature":"bad"}});
+    expect(bad.status).toBe(401);
+    const signature = createHmac("sha256", "test-secret").update(body + event.timestamp).digest("base64");
+    const signed = await t.fetch("/toast/webhook", {method:"POST", body, headers:{"Toast-Signature":signature}});
+    expect(signed.status).toBe(403);
+  } finally { vi.unstubAllEnvs(); }
+});
+it("expires sessions before allowing order access", async () => {
+  const { t, token } = await setup();
+  await t.run(async ctx => {const session = await ctx.db.query("sessions").first(); await ctx.db.patch(session!._id,{expiresAt:Date.now()-1});});
+  expect(await t.query(api.auth.me,{token})).toBeNull();
+  await expect(t.query(api.orders.staffList,{token})).rejects.toThrow("UNAUTHORIZED");
 });
