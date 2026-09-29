@@ -85,7 +85,7 @@ function imageUrl(value) {
 }
 function card(item, featured = false) {
   const image = imageUrl(item.imageUrl);
-  return `<button class="food-card" data-item="${esc(item.slug)}" aria-label="View ${esc(item.name)}"><div class="food-photo">${image ? `<img src="${esc(image)}" width="600" height="450" loading="lazy" decoding="async" alt="${esc(item.name)}">` : ""}</div><div class="food-info">${featured ? `<p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name || "FROM OUR KITCHEN")}</p>` : ""}<h3>${esc(item.name)}</h3><p>${esc(item.description)}</p><div class="price"><span>${item.isAvailable ? money(item.price) : "Currently unavailable"}</span><span class="item-link">View item</span></div></div></button>`;
+  return `<article class="food-card"><div class="food-photo">${image ? `<img src="${esc(image)}" width="600" height="450" loading="lazy" decoding="async" alt="${esc(item.name)}">` : ""}</div><div class="food-info">${featured ? `<p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name || "FROM OUR KITCHEN")}</p>` : ""}<h3><button class="item-name" data-item="${esc(item.slug)}" aria-label="Details for ${esc(item.name)}">${esc(item.name)}</button></h3><p>${esc(item.description)}</p>${item.options?.length ? `<label class="card-preparation">Preparation<select aria-label="Preparation for ${esc(item.name)}">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<div class="price"><span>${item.isAvailable ? money(item.price) : "Currently unavailable"}</span><button class="item-link" data-add="${esc(item.slug)}" aria-label="Add ${esc(item.name)} to cart" ${!item.isAvailable ? "disabled" : ""}>Add to cart</button></div><span class="cart-feedback" role="status"></span></div></article>`;
 }
 function renderMenu() {
   if (page === "home") {
@@ -129,6 +129,14 @@ function renderMenu() {
       : "Menu preview · Prices and online ordering coming soon.";
 }
 document.addEventListener("click", (e) => {
+  const add = e.target.closest("[data-add]");
+  if (add) {
+    const item = data.items.find((i) => i.slug === add.dataset.add);
+    const row = add.closest(".food-card");
+    const option = row.querySelector("select")?.value || "";
+    row.querySelector(".cart-feedback").textContent = addToCart(item, option);
+    return;
+  }
   const b = e.target.closest("[data-item]");
   if (b) {
     const item = data.items.find((i) => i.slug === b.dataset.item);
@@ -152,21 +160,30 @@ document.addEventListener("click", (e) => {
 function showItem(item) {
   if (!item) return;
   const d = $("#item-dialog");
-  d.innerHTML = `<button class="dialog-close" aria-label="Close">×</button>${imageUrl(item.imageUrl) ? `<img src="${esc(item.imageUrl)}" width="650" height="480" alt="${esc(item.name)}">` : ""}<div class="item-detail"><p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name)}</p><h2>${esc(item.name)}</h2><p>${esc(item.description)}</p><p><strong>${money(item.price)}</strong></p>${item.options?.length ? `<label>Preparation<select id="preparation">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<button class="button" id="add-pick" ${!item.isAvailable ? "disabled" : ""}>${item.isAvailable ? "Add to your picks" : "Currently unavailable"}</button><p class="muted">Save your favorites while you browse. Checkout takes place on Toast.</p>${item.illustrative ? '<p class="muted">Illustrative food photograph.</p>' : ""}</div>`;
+  d.innerHTML = `<button class="dialog-close" aria-label="Close">×</button>${imageUrl(item.imageUrl) ? `<img src="${esc(item.imageUrl)}" width="650" height="480" alt="${esc(item.name)}">` : ""}<div class="item-detail"><p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name)}</p><h2>${esc(item.name)}</h2><p>${esc(item.description)}</p><p><strong>${money(item.price)}</strong></p>${item.options?.length ? `<label>Preparation<select id="preparation">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<button class="button" id="add-pick" ${!item.isAvailable ? "disabled" : ""}>${item.isAvailable ? "Add to cart" : "Currently unavailable"}</button><p class="muted">Save your favorites while you browse. Checkout takes place on Toast.</p>${item.illustrative ? '<p class="muted">Illustrative food photograph.</p>' : ""}</div>`;
   d.querySelector("#preparation")?.addEventListener("change", (e) => {
     const o = item.options.find((o) => o.name === e.target.value);
     if (imageUrl(o?.imageUrl)) d.querySelector("img").src = o.imageUrl;
   });
   d.querySelector("#add-pick").onclick = () => {
     const option = d.querySelector("select")?.value || "";
-    const old = picks.find((p) => p.slug === item.slug && p.option === option);
-    if (old) old.quantity = Math.min(20, old.quantity + 1);
-    else if (picks.length < 40)
-      picks.push({ slug: item.slug, name: item.name, quantity: 1, option });
-    savePicks();
+    addToCart(item, option);
     d.close();
   };
   openDialog(d);
+}
+function addToCart(item, option = "") {
+  if (!item?.isAvailable) return "This item is currently unavailable.";
+  if (item.options?.length && !item.options.some((o) => o.name === option))
+    return "Choose a preparation first.";
+  const old = picks.find((p) => p.slug === item.slug && p.option === option);
+  if (old?.quantity >= 20) return "Maximum 20 of this item per cart.";
+  if (!old && picks.length >= 40)
+    return "Your cart is full. Remove an item to add another.";
+  if (old) old.quantity += 1;
+  else picks.push({ slug: item.slug, name: item.name, quantity: 1, option });
+  savePicks();
+  return `Added to cart · ${old?.quantity || 1} in cart`;
 }
 function savePicks() {
   try {
@@ -183,7 +200,7 @@ function renderTray() {
             `<div class="tray-row"><div><strong>${esc(p.name)}</strong>${p.option ? `<br><small>${esc(p.option)}</small>` : ""}<br><small>Quantity: ${p.quantity}</small></div><button data-remove="${i}" aria-label="Remove ${esc(p.name)}">Remove</button></div>`,
         )
         .join("")
-    : "<p>Your picks are empty. Add something from the menu.</p>";
+    : "<p>Your cart is empty. Add something from the menu.</p>";
 }
 $("#open-tray")?.addEventListener("click", () => {
   renderTray();
@@ -327,4 +344,8 @@ connect();
 if (page === "menu") {
   const item = new URLSearchParams(location.search).get("item");
   if (item) showItem(data.items.find((i) => i.slug === item));
+  if (new URLSearchParams(location.search).get("cart") === "1") {
+    renderTray();
+    openDialog($("#tray-dialog"));
+  }
 }

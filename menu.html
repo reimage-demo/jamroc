@@ -10,7 +10,7 @@
     />
     <title>Food & drinks | Jam Roc Restaurant & Lounge</title>
     <link rel="icon" href="assets/brand/logo.webp" />
-    <link rel="stylesheet" href="styles.css?v=20260929" />
+    <link rel="stylesheet" href="styles.css?v=20260929-cart" />
   </head>
   <body data-page="menu">
     <a class="skip" href="#main">Skip to content</a>
@@ -49,7 +49,7 @@
             placeholder="Find a favorite…"
             aria-label="Search menu" /></label
         ><button class="text-link" id="open-tray">
-          Your picks <span id="tray-count">0</span>
+          Cart <span id="tray-count">0</span>
         </button>
       </div>
       <div class="menu-layout">
@@ -74,11 +74,11 @@
       <dialog id="tray-dialog">
         <button class="dialog-close" aria-label="Close">×</button>
 
-        <h2>A little of what you love.</h2>
+        <h2>Your cart</h2>
         <div id="tray-items"></div>
         <p class="muted">
           This list is for browsing. Orders and payments are placed on Toast;
-          these picks won’t transfer automatically.
+          cart items won’t transfer automatically.
         </p>
         <button class="button toast-order">Order on Toast</button>
       </dialog>
@@ -115,6 +115,6 @@
     </dialog>
     <script src="public-config.js"></script>
     <script src="vendor/convex-client.js" defer></script>
-    <script type="module" src="shared.js?v=20260929"></script>
+    <script type="module" src="shared.js?v=20260929-cart"></script>
   </body>
 </html>
