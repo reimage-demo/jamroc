@@ -133,8 +133,14 @@ function imageUrl(value) {
     ? value
     : "";
 }
+function displayImage(item) {
+  const url = imageUrl(item.imageUrl);
+  return item.kind === "drink" && url.startsWith("assets/images/menu/")
+    ? url + "?v=20260930-full-drinks"
+    : url;
+}
 function card(item, featured = false) {
-  const image = imageUrl(item.imageUrl);
+  const image = displayImage(item);
   return `<article class="food-card ${item.kind === "drink" ? "drink-card" : ""}" data-reveal-key="${esc(item.slug)}"><div class="food-photo">${image ? `<img src="${esc(image)}" width="${item.kind === "drink" ? 190 : 600}" height="${item.kind === "drink" ? 246 : 450}" loading="lazy" decoding="async" alt="${esc(item.name)}">` : ""}</div><div class="food-info">${featured ? `<p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name || "FROM OUR KITCHEN")}</p>` : ""}<h3><button class="item-name" data-item="${esc(item.slug)}" aria-label="Details for ${esc(item.name)}">${esc(item.name)}</button></h3><p>${esc(item.description)}</p>${item.options?.length ? `<label class="card-preparation">Preparation<select aria-label="Preparation for ${esc(item.name)}">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<div class="price"><span>${item.isAvailable ? money(item.price) : "Currently unavailable"}</span><button class="item-link" data-add="${esc(item.slug)}" aria-label="Add ${esc(item.name)} to cart" ${!item.isAvailable ? "disabled" : ""}>Add to cart</button></div><span class="cart-feedback" role="status"></span></div></article>`;
 }
 function renderMenu() {
@@ -214,7 +220,7 @@ function showItem(item) {
   if (!item) return;
   const d = $("#item-dialog");
   d.classList.toggle("drink-detail", item.kind === "drink");
-  d.innerHTML = `<button class="dialog-close" aria-label="Close">×</button>${imageUrl(item.imageUrl) ? `<img src="${esc(item.imageUrl)}" width="650" height="480" alt="${esc(item.name)}">` : ""}<div class="item-detail"><p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name)}</p><h2>${esc(item.name)}</h2><p>${esc(item.description)}</p><p><strong>${money(item.price)}</strong></p>${item.options?.length ? `<label>Preparation<select id="preparation">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<button class="button" id="add-pick" ${!item.isAvailable ? "disabled" : ""}>${item.isAvailable ? "Add to cart" : "Currently unavailable"}</button><p class="muted">Save your favorites while you browse. Checkout takes place on Toast.</p>${item.illustrative ? '<p class="muted">Illustrative food photograph.</p>' : ""}</div>`;
+  d.innerHTML = `<button class="dialog-close" aria-label="Close">×</button>${imageUrl(item.imageUrl) ? `<img src="${esc(displayImage(item))}" width="650" height="480" alt="${esc(item.name)}">` : ""}<div class="item-detail"><p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name)}</p><h2>${esc(item.name)}</h2><p>${esc(item.description)}</p><p><strong>${money(item.price)}</strong></p>${item.options?.length ? `<label>Preparation<select id="preparation">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<button class="button" id="add-pick" ${!item.isAvailable ? "disabled" : ""}>${item.isAvailable ? "Add to cart" : "Currently unavailable"}</button><p class="muted">Save your favorites while you browse. Checkout takes place on Toast.</p>${item.illustrative ? '<p class="muted">Illustrative food photograph.</p>' : ""}</div>`;
   d.querySelector("#preparation")?.addEventListener("change", (e) => {
     const o = item.options.find((o) => o.name === e.target.value);
     if (imageUrl(o?.imageUrl)) d.querySelector("img").src = o.imageUrl;

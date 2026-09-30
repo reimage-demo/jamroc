@@ -1618,9 +1618,18 @@ dialog::backdrop {
 }
 
 /* Original cocktail poster crops retain their portrait composition. */
-.menu-grid .drink-card .food-photo { aspect-ratio: 190 / 246; background: white; }
+.menu-grid .drink-card { grid-template-columns: 190px minmax(0, 1fr); }
+.menu-grid .drink-card .food-photo { aspect-ratio: auto; height: auto; background: white; overflow: visible; }
+.menu-grid .drink-card .food-photo img { width: 100%; height: auto; object-fit: contain; }
+@media (max-width: 700px) {
+  .menu-grid .drink-card { grid-template-columns: 120px minmax(0, 1fr); }
+}
+@media (max-width: 420px) {
+  .menu-grid .drink-card { grid-template-columns: 1fr; gap: 16px; }
+  .menu-grid .drink-card .food-photo { width: 190px; }
+}
 .drink-card .food-info > p, .drink-detail .item-detail > p { white-space: pre-line; }
-.drink-detail > img { object-fit: contain; height: 300px; background: white; }
+.drink-detail > img { object-fit: contain; width: auto; max-width: 100%; height: auto; max-height: 350px; margin: 24px auto 0; background: white; }
 .builder-entry { display: flex; align-items: center; flex-wrap: wrap; gap: 20px; padding: 24px 0 30px; margin-bottom: 30px; border-top: 2px solid var(--green); border-bottom: 1px solid var(--line); }
 .builder-entry > div { flex: 1; min-width: 220px; }
 .builder-entry h2 { font-size: 38px; margin-bottom: 12px; }
