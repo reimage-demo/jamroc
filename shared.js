@@ -36,6 +36,53 @@ try {
       .slice(0, 40);
 } catch {}
 const page = document.body.dataset.page;
+const refreshScrollReveals = setupScrollReveals();
+function setupScrollReveals() {
+  const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (motion.matches || !("IntersectionObserver" in window)) return () => {};
+  const revealedItems = new Set();
+  const reveal = (element) => {
+    element.classList.add("is-revealed");
+    if (element.dataset.revealKey) revealedItems.add(element.dataset.revealKey);
+    observer.unobserve(element);
+  };
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) reveal(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+  const selector = [
+    ".hero-copy > *", ".hero-art", ".section-heading", ".food-card",
+    ".callout-image", ".callout-copy", ".pickup-callout > *",
+    ".page-heading > *", ".contact-details", ".contact-art", ".status-title",
+  ].map((s) => `main ${s}`).join(", ");
+  document.addEventListener("focusin", (event) => {
+    const target = event.target.closest(".scroll-reveal");
+    if (target) reveal(target);
+  });
+  motion.addEventListener("change", (event) => {
+    if (!event.matches) return;
+    document.querySelectorAll(".scroll-reveal").forEach(reveal);
+    observer.disconnect();
+  });
+  return () => {
+    // Menu subscriptions and filters replace cards; release the previous nodes.
+    observer.disconnect();
+    document.querySelectorAll(selector).forEach((element) => {
+      if (motion.matches || element.classList.contains("is-revealed")) return;
+      // Preserve restored scroll positions and avoid replaying live menu updates.
+      if (element.getBoundingClientRect().bottom < 0 ||
+          revealedItems.has(element.dataset.revealKey)) {
+        reveal(element);
+        return;
+      }
+      const index = Array.prototype.indexOf.call(element.parentElement.children, element);
+      element.style.setProperty("--reveal-delay", `${(index % 3) * 0.09}s`);
+      element.classList.add("scroll-reveal");
+      observer.observe(element);
+    });
+  };
+}
 document
   .querySelector(`[data-nav="${page}"]`)
   ?.setAttribute("aria-current", "page");
@@ -85,7 +132,7 @@ function imageUrl(value) {
 }
 function card(item, featured = false) {
   const image = imageUrl(item.imageUrl);
-  return `<article class="food-card"><div class="food-photo">${image ? `<img src="${esc(image)}" width="600" height="450" loading="lazy" decoding="async" alt="${esc(item.name)}">` : ""}</div><div class="food-info">${featured ? `<p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name || "FROM OUR KITCHEN")}</p>` : ""}<h3><button class="item-name" data-item="${esc(item.slug)}" aria-label="Details for ${esc(item.name)}">${esc(item.name)}</button></h3><p>${esc(item.description)}</p>${item.options?.length ? `<label class="card-preparation">Preparation<select aria-label="Preparation for ${esc(item.name)}">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<div class="price"><span>${item.isAvailable ? money(item.price) : "Currently unavailable"}</span><button class="item-link" data-add="${esc(item.slug)}" aria-label="Add ${esc(item.name)} to cart" ${!item.isAvailable ? "disabled" : ""}>Add to cart</button></div><span class="cart-feedback" role="status"></span></div></article>`;
+  return `<article class="food-card" data-reveal-key="${esc(item.slug)}"><div class="food-photo">${image ? `<img src="${esc(image)}" width="600" height="450" loading="lazy" decoding="async" alt="${esc(item.name)}">` : ""}</div><div class="food-info">${featured ? `<p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name || "FROM OUR KITCHEN")}</p>` : ""}<h3><button class="item-name" data-item="${esc(item.slug)}" aria-label="Details for ${esc(item.name)}">${esc(item.name)}</button></h3><p>${esc(item.description)}</p>${item.options?.length ? `<label class="card-preparation">Preparation<select aria-label="Preparation for ${esc(item.name)}">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<div class="price"><span>${item.isAvailable ? money(item.price) : "Currently unavailable"}</span><button class="item-link" data-add="${esc(item.slug)}" aria-label="Add ${esc(item.name)} to cart" ${!item.isAvailable ? "disabled" : ""}>Add to cart</button></div><span class="cart-feedback" role="status"></span></div></article>`;
 }
 function renderMenu() {
   if (page === "home") {
@@ -95,6 +142,7 @@ function renderMenu() {
     $("#featured-items").innerHTML =
       featured.map((i) => card(i, true)).join("") ||
       "<p>Our menu is being updated. Check back soon.</p>";
+    refreshScrollReveals();
     return;
   }
   if (page !== "menu") return;
@@ -127,6 +175,7 @@ function renderMenu() {
         ? "Browse here. Place and pay for your order on Toast."
         : "Online ordering is coming soon. Browse our current menu below."
       : "Menu preview · Prices and online ordering coming soon.";
+  refreshScrollReveals();
 }
 document.addEventListener("click", (e) => {
   const add = e.target.closest("[data-add]");
@@ -339,6 +388,7 @@ async function connect() {
   }
 }
 renderMenu();
+refreshScrollReveals();
 savePicks();
 connect();
 if (page === "menu") {
