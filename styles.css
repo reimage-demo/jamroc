@@ -1616,3 +1616,40 @@ dialog::backdrop {
     transform: none !important;
   }
 }
+
+/* Original cocktail poster crops retain their portrait composition. */
+.menu-grid .drink-card .food-photo { aspect-ratio: 190 / 246; background: white; }
+.drink-card .food-info > p, .drink-detail .item-detail > p { white-space: pre-line; }
+.drink-detail > img { object-fit: contain; height: 300px; background: white; }
+.builder-entry { display: flex; align-items: center; flex-wrap: wrap; gap: 20px; padding: 24px 0 30px; margin-bottom: 30px; border-top: 2px solid var(--green); border-bottom: 1px solid var(--line); }
+.builder-entry > div { flex: 1; min-width: 220px; }
+.builder-entry h2 { font-size: 38px; margin-bottom: 12px; }
+.builder-entry .eyebrow { color: var(--green); margin-bottom: 10px; }
+.builder-entry p { margin-bottom: 8px; }
+#builder-feedback { flex-basis: 100%; font-size: 14px; color: var(--green); }
+#builder-feedback:empty { display: none; }
+.drink-builder-dialog { max-width: 660px; padding: 32px; }
+.builder-logo { width: 82px; height: 72px; object-fit: contain; margin-bottom: 16px; }
+.drink-builder-dialog h2 { font-size: 38px; margin-bottom: 8px; }
+.builder-progress { list-style: none; display: grid; grid-template-columns: repeat(4,1fr); padding: 0; margin: 24px 0; border-bottom: 1px solid var(--line); }
+.builder-progress li { display: flex; gap: 8px; align-items: center; padding: 10px 0; font-size: 13px; color: var(--muted); border-bottom: 3px solid transparent; }
+.builder-progress li[aria-current] { color: var(--green); font-weight: 700; border-color: var(--green); }
+.builder-progress span { font-variant-numeric: tabular-nums; }
+.builder-content { min-height: 150px; }
+.builder-content h3 { font-size: 30px; margin-bottom: 20px; }
+.builder-content label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+.builder-content select { width: 100%; min-height: 48px; background: white; border: 1px solid var(--line); color: var(--ink); padding: 10px; margin-bottom: 12px; }
+.builder-actions { display: flex; justify-content: space-between; align-items: center; gap: 20px; border-top: 1px solid var(--line); padding-top: 20px; }
+.builder-error { color: #9b251d; font-size: 14px; min-height: 1.6em; margin: 12px 0; }
+.drink-summary { margin: 0 0 24px; }
+.drink-summary > div { display: grid; grid-template-columns: 75px 1fr; gap: 16px; border-bottom: 1px solid var(--line); padding: 12px 0; }
+.drink-summary dt { font-weight: 700; }
+.drink-summary dd { margin: 0; }
+.saved-drink-summary { white-space: pre-line; font-size: 13px; margin: 8px 0; }
+@media (max-width: 700px) {
+  .drink-builder-dialog { padding: 24px 20px; }
+  .drink-builder-dialog h2 { font-size: 32px; }
+  .builder-progress li { font-size: 12px; gap: 4px; }
+  .builder-entry h2 { font-size: 32px; }
+  .builder-entry .button { width: 100%; }
+}

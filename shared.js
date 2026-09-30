@@ -1,4 +1,6 @@
 import { catalog } from "./catalog.js";
+import { createDrinkBuilder } from "./drink-builder.js";
+import { addDrink, validPick, drinkSummary, selectedDrink } from "./drink-cart.js";
 const $ = (s) => document.querySelector(s);
 const esc = (s) =>
   String(s ?? "").replace(
@@ -18,7 +20,7 @@ const money = (n) =>
 let data = catalog,
   settings = null,
   client = null,
-  kind = "food",
+  kind = new URLSearchParams(location.search).get("kind") === "drink" ? "drink" : "food",
   search = "",
   names = {},
   board = [];
@@ -27,15 +29,16 @@ try {
   const parsed = JSON.parse(localStorage.getItem("jamroc-picks") || "[]");
   if (Array.isArray(parsed))
     picks = parsed
-      .filter(
-        (x) =>
-          typeof x.slug === "string" &&
-          Number.isInteger(x.quantity) &&
-          x.quantity > 0,
-      )
+      .filter(validPick)
       .slice(0, 40);
 } catch {}
 const page = document.body.dataset.page;
+let liveDrinkConfig;
+const drinkBuilder = createDrinkBuilder({onSave(drink) {
+  const error = addDrink(picks, drink);
+  if (!error) savePicks();
+  return error;
+}});
 const refreshScrollReveals = setupScrollReveals();
 function setupScrollReveals() {
   const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -132,7 +135,7 @@ function imageUrl(value) {
 }
 function card(item, featured = false) {
   const image = imageUrl(item.imageUrl);
-  return `<article class="food-card" data-reveal-key="${esc(item.slug)}"><div class="food-photo">${image ? `<img src="${esc(image)}" width="600" height="450" loading="lazy" decoding="async" alt="${esc(item.name)}">` : ""}</div><div class="food-info">${featured ? `<p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name || "FROM OUR KITCHEN")}</p>` : ""}<h3><button class="item-name" data-item="${esc(item.slug)}" aria-label="Details for ${esc(item.name)}">${esc(item.name)}</button></h3><p>${esc(item.description)}</p>${item.options?.length ? `<label class="card-preparation">Preparation<select aria-label="Preparation for ${esc(item.name)}">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<div class="price"><span>${item.isAvailable ? money(item.price) : "Currently unavailable"}</span><button class="item-link" data-add="${esc(item.slug)}" aria-label="Add ${esc(item.name)} to cart" ${!item.isAvailable ? "disabled" : ""}>Add to cart</button></div><span class="cart-feedback" role="status"></span></div></article>`;
+  return `<article class="food-card ${item.kind === "drink" ? "drink-card" : ""}" data-reveal-key="${esc(item.slug)}"><div class="food-photo">${image ? `<img src="${esc(image)}" width="${item.kind === "drink" ? 190 : 600}" height="${item.kind === "drink" ? 246 : 450}" loading="lazy" decoding="async" alt="${esc(item.name)}">` : ""}</div><div class="food-info">${featured ? `<p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name || "FROM OUR KITCHEN")}</p>` : ""}<h3><button class="item-name" data-item="${esc(item.slug)}" aria-label="Details for ${esc(item.name)}">${esc(item.name)}</button></h3><p>${esc(item.description)}</p>${item.options?.length ? `<label class="card-preparation">Preparation<select aria-label="Preparation for ${esc(item.name)}">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<div class="price"><span>${item.isAvailable ? money(item.price) : "Currently unavailable"}</span><button class="item-link" data-add="${esc(item.slug)}" aria-label="Add ${esc(item.name)} to cart" ${!item.isAvailable ? "disabled" : ""}>Add to cart</button></div><span class="cart-feedback" role="status"></span></div></article>`;
 }
 function renderMenu() {
   if (page === "home") {
@@ -146,6 +149,7 @@ function renderMenu() {
     return;
   }
   if (page !== "menu") return;
+  $("#drink-builder-entry").innerHTML = kind === "drink" ? drinkBuilder.renderEntry() : "";
   const cats = data.categories
     .filter((c) => c.kind === kind)
     .sort((a, b) => a.sortOrder - b.sortOrder);
@@ -209,6 +213,7 @@ document.addEventListener("click", (e) => {
 function showItem(item) {
   if (!item) return;
   const d = $("#item-dialog");
+  d.classList.toggle("drink-detail", item.kind === "drink");
   d.innerHTML = `<button class="dialog-close" aria-label="Close">×</button>${imageUrl(item.imageUrl) ? `<img src="${esc(item.imageUrl)}" width="650" height="480" alt="${esc(item.name)}">` : ""}<div class="item-detail"><p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name)}</p><h2>${esc(item.name)}</h2><p>${esc(item.description)}</p><p><strong>${money(item.price)}</strong></p>${item.options?.length ? `<label>Preparation<select id="preparation">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<button class="button" id="add-pick" ${!item.isAvailable ? "disabled" : ""}>${item.isAvailable ? "Add to cart" : "Currently unavailable"}</button><p class="muted">Save your favorites while you browse. Checkout takes place on Toast.</p>${item.illustrative ? '<p class="muted">Illustrative food photograph.</p>' : ""}</div>`;
   d.querySelector("#preparation")?.addEventListener("change", (e) => {
     const o = item.options.find((o) => o.name === e.target.value);
@@ -246,7 +251,7 @@ function renderTray() {
     ? picks
         .map(
           (p, i) =>
-            `<div class="tray-row"><div><strong>${esc(p.name)}</strong>${p.option ? `<br><small>${esc(p.option)}</small>` : ""}<br><small>Quantity: ${p.quantity}</small></div><button data-remove="${i}" aria-label="Remove ${esc(p.name)}">Remove</button></div>`,
+            `<div class="tray-row"><div><strong>${esc(p.name)}</strong>${p.drink ? `<p class="saved-drink-summary">${esc(drinkSummary(p.drink))}</p><small>Price coming soon${liveDrinkConfig !== undefined && !selectedDrink(liveDrinkConfig, {spirit:p.drink.spirit.id,chaser:p.drink.chaser.id,extra:p.drink.extra?.id || ''}) ? " · Some choices are currently unavailable" : ""}</small>` : p.option ? `<br><small>${esc(p.option)}</small>` : ""}<br><small>Quantity: ${p.quantity}</small></div><button data-remove="${i}" aria-label="Remove ${esc(p.name)}">Remove</button></div>`,
         )
         .join("")
     : "<p>Your cart is empty. Add something from the menu.</p>";
@@ -320,6 +325,17 @@ async function connect() {
     for (let i = 0; i < 50 && !window.JamRocConvex; i++)
       await new Promise((r) => setTimeout(r, 100));
     client = new window.JamRocConvex.ConvexClient(url);
+    if (page === "menu") client.onUpdate("drinkBuilder:publicConfig", {}, (config) => {
+      liveDrinkConfig = config;
+      drinkBuilder.update(config);
+      $("#drink-builder-entry").innerHTML = kind === "drink" ? drinkBuilder.renderEntry() : "";
+      if ($("#tray-dialog").open) renderTray();
+    }, () => {
+      liveDrinkConfig = null;
+      drinkBuilder.connectionError();
+      $("#drink-builder-entry").innerHTML = "";
+      if ($("#tray-dialog").open) renderTray();
+    });
     client.onUpdate(
       "settings:publicSettings",
       {},
@@ -385,8 +401,18 @@ async function connect() {
   } catch {
     client = null;
     connectionError();
+    if (page === "menu") {
+      liveDrinkConfig = null;
+      drinkBuilder.connectionError();
+      $("#drink-builder-entry").innerHTML = "";
+    }
   }
 }
+document.querySelectorAll("[data-kind]").forEach(button => {
+  const active = button.dataset.kind === kind;
+  button.classList.toggle("selected", active);
+  button.setAttribute("aria-pressed", active);
+});
 renderMenu();
 refreshScrollReveals();
 savePicks();
