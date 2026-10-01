@@ -1,5 +1,5 @@
 import { catalog } from "./catalog.js";
-import { createDrinkBuilder } from "./drink-builder.js";
+import { createDrinkBuilder } from "./drink-builder.js?v=20261001-new-drink-photos";
 import { addDrink, validPick, drinkSummary, selectedDrink } from "./drink-cart.js";
 const $ = (s) => document.querySelector(s);
 const esc = (s) =>
@@ -136,7 +136,7 @@ function imageUrl(value) {
 function displayImage(item) {
   const url = imageUrl(item.imageUrl);
   return item.kind === "drink" && url.startsWith("assets/images/menu/")
-    ? url + "?v=20260930-full-drinks"
+    ? url + "?v=20261001-new-drink-photos"
     : url;
 }
 function card(item, featured = false) {
@@ -155,10 +155,9 @@ function renderMenu() {
     return;
   }
   if (page !== "menu") return;
-  $("#drink-builder-entry").innerHTML = kind === "drink" ? drinkBuilder.renderEntry() : "";
   const cats = data.categories
     .filter((c) => c.kind === kind)
-    .sort((a, b) => a.sortOrder - b.sortOrder);
+    .sort((a, b) => kind === "drink" ? (a.slug === "cocktails" ? -1 : b.slug === "cocktails" ? 1 : a.sortOrder - b.sortOrder) : a.sortOrder - b.sortOrder);
   $("#category-nav").innerHTML = cats
     .map((c) => `<a href="#${esc(c.slug)}">${esc(c.name)}</a>`)
     .join("");
@@ -174,8 +173,9 @@ function renderMenu() {
                 (i.name + " " + i.description).toLowerCase().includes(search)),
           )
           .sort((a, b) => a.sortOrder - b.sortOrder);
-        if (search && !items.length) return "";
-        return `<section class="menu-section" id="${esc(c.slug)}"><h2>${esc(c.name)}</h2>${items.length ? `<div class="menu-grid">${items.map((i) => card(i)).join("")}</div>` : `<p class="empty">${kind === "drink" ? "Our " + esc(c.name.toLowerCase()) + " selection is coming soon." : "This section is being updated."}</p>`}</section>`;
+        const builder = kind === "drink" && c.slug === "cocktails" ? drinkBuilder.renderEntry(search) : "";
+        if (search && !items.length && !builder) return "";
+        return `<section class="menu-section" id="${esc(c.slug)}"><h2>${esc(c.name)}</h2>${items.length || builder ? `<div class="menu-grid">${builder}${items.map((i) => card(i)).join("")}</div>` : `<p class="empty">${kind === "drink" ? "Our " + esc(c.name.toLowerCase()) + " selection is coming soon." : "This section is being updated."}</p>`}</section>`;
       })
       .join("") || '<p class="empty">No matches. Try a different dish.</p>';
   $("#menu-notice").textContent = data.preview
@@ -220,7 +220,7 @@ function showItem(item) {
   if (!item) return;
   const d = $("#item-dialog");
   d.classList.toggle("drink-detail", item.kind === "drink");
-  d.innerHTML = `<button class="dialog-close" aria-label="Close">×</button>${imageUrl(item.imageUrl) ? `<img src="${esc(displayImage(item))}" width="650" height="480" alt="${esc(item.name)}">` : ""}<div class="item-detail"><p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name)}</p><h2>${esc(item.name)}</h2><p>${esc(item.description)}</p><p><strong>${money(item.price)}</strong></p>${item.options?.length ? `<label>Preparation<select id="preparation">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<button class="button" id="add-pick" ${!item.isAvailable ? "disabled" : ""}>${item.isAvailable ? "Add to cart" : "Currently unavailable"}</button><p class="muted">Save your favorites while you browse. Checkout takes place on Toast.</p>${item.illustrative ? '<p class="muted">Illustrative food photograph.</p>' : ""}</div>`;
+  d.innerHTML = `<button class="dialog-close" aria-label="Close">×</button>${imageUrl(item.imageUrl) ? `<img src="${esc(displayImage(item))}" width="650" height="480" alt="${esc(item.name)}">` : ""}<div class="item-detail"><p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name)}</p><h2>${esc(item.name)}</h2><p>${esc(item.description)}</p><p><strong>${money(item.price)}</strong></p>${item.options?.length ? `<label>Preparation<select id="preparation">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<button class="button" id="add-pick" ${!item.isAvailable ? "disabled" : ""}>${item.isAvailable ? "Add to cart" : "Currently unavailable"}</button><p class="muted">Save your favorites while you browse. Checkout takes place on Toast.</p>${item.illustrative ? '<p class="muted">Illustrative photograph.</p>' : ""}</div>`;
   d.querySelector("#preparation")?.addEventListener("change", (e) => {
     const o = item.options.find((o) => o.name === e.target.value);
     if (imageUrl(o?.imageUrl)) d.querySelector("img").src = o.imageUrl;
@@ -334,12 +334,12 @@ async function connect() {
     if (page === "menu") client.onUpdate("drinkBuilder:publicConfig", {}, (config) => {
       liveDrinkConfig = config;
       drinkBuilder.update(config);
-      $("#drink-builder-entry").innerHTML = kind === "drink" ? drinkBuilder.renderEntry() : "";
+      renderMenu();
       if ($("#tray-dialog").open) renderTray();
     }, () => {
       liveDrinkConfig = null;
       drinkBuilder.connectionError();
-      $("#drink-builder-entry").innerHTML = "";
+      renderMenu();
       if ($("#tray-dialog").open) renderTray();
     });
     client.onUpdate(
@@ -410,7 +410,7 @@ async function connect() {
     if (page === "menu") {
       liveDrinkConfig = null;
       drinkBuilder.connectionError();
-      $("#drink-builder-entry").innerHTML = "";
+      renderMenu();
     }
   }
 }
