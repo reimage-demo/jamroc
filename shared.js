@@ -279,22 +279,27 @@ $("#menu-search")?.addEventListener("input", (e) => {
   renderMenu();
 });
 function renderContact() {
-  if (page !== "contact" || !settings) return;
-  const fields = [
-    ["Find us", settings.address],
-    ["Opening hours", settings.hours],
-    ["Call us", settings.phone],
-    ["Email", settings.email],
-  ].filter(([, v]) => v);
-  if (!fields.length) return;
-  $("#contact-details").innerHTML =
-    "<h2>Make yourself at home.</h2>" +
-    fields
-      .map(([label, value]) => `<h3>${label}</h3><p>${esc(value)}</p>`)
-      .join("") +
-    (settings.instagram
-      ? `<a class="text-link" href="${esc(settings.instagram)}" target="_blank" rel="noopener noreferrer">Follow us on Instagram</a>`
-      : "");
+  if (!["home", "contact"].includes(page) || !settings) return;
+  // Keep the published visit details when individual admin fields are unset.
+  for (const field of ["address", "phone", "hours"]) {
+    const value = settings[field]?.trim();
+    if (!value) continue;
+    document.querySelectorAll(`[data-contact="${field}"]`).forEach((element) => {
+      element.textContent = value;
+      if (field === "address")
+        element.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(value);
+      if (field === "phone") element.href = "tel:" + value.replace(/[^+\d]/g, "");
+    });
+    if (field === "address")
+      document.querySelectorAll('[data-contact="directions"]').forEach((link) => {
+        link.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(value);
+      });
+  }
+  const extras = $('[data-contact="extras"]');
+  if (extras) extras.innerHTML =
+    (settings.email ? `<h3>Email</h3><p>${esc(settings.email)}</p>` : "") +
+    (settings.instagram && /^https:\/\/(www\.)?instagram\.com\//.test(settings.instagram)
+      ? `<a class="text-link" href="${esc(settings.instagram)}" target="_blank" rel="noopener noreferrer">Follow us on Instagram</a>` : "");
 }
 function renderBoard() {
   if (page !== "status") return;

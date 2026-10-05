@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#f6ad2b" />
+    <meta name="theme-color" content="#ffffff" />
     <meta
       name="description"
       content="Jam Roc Restaurant & Lounge. Jamaican classics, fresh seafood, food and drinks, and live pickup updates."
     />
     <title>Jamaican food, island spirit | Jam Roc Restaurant & Lounge</title>
     <link rel="icon" href="assets/brand/logo.webp" />
-    <link rel="stylesheet" href="styles.css?v=20261001-new-drink-photos" />
+    <link rel="stylesheet" href="styles.css?v=20261004-visit" />
   </head>
   <body data-page="home">
     <a class="skip" href="#main">Skip to content</a>
@@ -34,13 +34,14 @@
     <main id="main">
       <section class="hero">
         <div class="hero-copy">
-          <h1>Jamaican food.<br />Made with spirit.</h1>
+          <p class="eyebrow">A little island. A lot of soul.</p>
+          <h1>Jamaican food.<br /><em>Made with spirit.</em></h1>
           <p class="hero-description">
             From smoky jerk chicken to slow-braised oxtail. Your Jamaican
             favorites, fresh from our kitchen.
           </p>
           <div class="hero-actions">
-            <a class="button" href="menu.html">Explore the menu </a
+            <a class="button" href="menu.html">Explore the menu</a
             ><a class="text-link" href="order-status.html">Check your order</a>
           </div>
         </div>
@@ -55,21 +56,47 @@
           />
 
           <div class="hero-photo-label">
-            Jerk chicken — smoky, spiced, grilled.
+            <span>THE JERK CHICKEN</span><span>Smoky. Spiced. Grilled.</span>
           </div>
+        </div>
+      </section>
+
+      <section class="home-visit" aria-labelledby="home-visit-title">
+        <div>
+          <p class="eyebrow">Visit Jam Roc</p>
+          <h2 id="home-visit-title">Your spot in Hartford.</h2>
+          <p><a data-contact="address" href="https://www.google.com/maps/search/?api=1&amp;query=3395+Main+St%2C+Hartford%2C+CT+06120" target="_blank" rel="noopener noreferrer">3395 Main St, Hartford, CT 06120</a></p>
+          <p><a data-contact="phone" href="tel:+18609061812">(860) 906-1812</a></p>
+          <p class="visit-music">Live music. A lively atmosphere.</p>
+          <a class="text-link" href="contact.html">Plan your visit</a>
+        </div>
+        <div>
+          <h3>Opening hours</h3>
+          <div data-contact="hours"><table class="hours-table" aria-label="Weekly opening hours">
+              <tbody>
+                <tr><th scope="row">Sunday</th><td>4 PM–1 AM</td></tr>
+                <tr><th scope="row">Monday</th><td>10 AM–1 AM</td></tr>
+                <tr><th scope="row">Tuesday</th><td>10 AM–1 AM</td></tr>
+                <tr><th scope="row">Wednesday</th><td>10 AM–1 AM</td></tr>
+                <tr><th scope="row">Thursday</th><td>10 AM–1 AM</td></tr>
+                <tr><th scope="row">Friday</th><td>10 AM–2 AM</td></tr>
+                <tr><th scope="row">Saturday</th><td>10 AM–2 AM</td></tr>
+              </tbody>
+            </table></div>
         </div>
       </section>
 
       <section class="section signature">
         <div class="section-heading">
           <div>
-            <h2>From our kitchen</h2>
+            <p class="eyebrow">The favorites</p>
+            <h2>From our kitchen.</h2>
           </div>
 
           <a class="text-link" href="menu.html">See the full menu</a>
         </div>
         <div class="featured-grid" id="featured-items"></div>
-        <a class="text-link" href="menu.html?cart=1"
+        <a class="text-link saved-picks-link" href="menu.html?cart=1"
           >View cart <span id="tray-count">0</span></a
         >
       </section>
@@ -85,10 +112,11 @@
           />
         </div>
         <div class="callout-copy">
-          <h2>Seafood, your way</h2>
+          <p class="eyebrow">Fresh from the kitchen</p>
+          <h2>Seafood,<br />your way.</h2>
           <p>
-            Find your favorite, from curry goat and brown stew chicken to
-            seafood made to order. Add a side of plantain and make it your own.
+            From whole escovitch snapper to shrimp cooked just how you like it.
+            Add a side of plantain and settle into island time.
           </p>
           <a class="button button-light" href="menu.html#seafood"
             >Explore seafood</a
@@ -140,6 +168,6 @@
     </dialog>
     <script src="public-config.js"></script>
     <script src="vendor/convex-client.js" defer></script>
-    <script type="module" src="shared.js?v=20261001-new-drink-photos"></script>
+    <script type="module" src="shared.js?v=20261004-visit"></script>
   </body>
 </html>
