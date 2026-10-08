@@ -10,7 +10,7 @@
     />
     <title>Jamaican food, island spirit | Jam Roc Restaurant & Lounge</title>
     <link rel="icon" href="assets/brand/logo.webp" />
-    <link rel="stylesheet" href="styles.css?v=20261004-visit" />
+    <link rel="stylesheet" href="styles.css?v=20261008-hero" />
   </head>
   <body data-page="home">
     <a class="skip" href="#main">Skip to content</a>
@@ -32,32 +32,25 @@
       <button class="button compact toast-order">Order online</button>
     </header>
     <main id="main">
-      <section class="hero">
+      <section class="hero" aria-labelledby="hero-heading">
+        <div class="hero-spread" aria-hidden="true">
+          <img class="hero-cutout hero-chicken" src="assets/images/hero/jerk-chicken.webp" width="720" height="720" fetchpriority="high" alt="" />
+          <img class="hero-cutout hero-mango" src="assets/images/hero/mango-madness.webp" width="480" height="720" alt="" />
+          <img class="hero-cutout hero-strawberry" src="assets/images/hero/strawberry-sunset.webp" width="480" height="720" alt="" />
+          <img class="hero-cutout hero-oxtail" src="assets/images/hero/oxtail.webp" width="720" height="720" alt="" />
+        </div>
         <div class="hero-copy">
           <p class="eyebrow">A little island. A lot of soul.</p>
-          <h1>Jamaican food.<br /><em>Made with spirit.</em></h1>
+          <h1 id="hero-heading">Jamaican food.<br />Made with spirit.</h1>
           <p class="hero-description">
-            From smoky jerk chicken to slow-braised oxtail. Your Jamaican
-            favorites, fresh from our kitchen.
+            Smoky jerk. Slow-braised oxtail. Island cocktails.<br />
+            Come for the flavor. Stay for the vibes.
           </p>
           <div class="hero-actions">
-            <a class="button" href="menu.html">Explore the menu</a
-            ><a class="text-link" href="order-status.html">Check your order</a>
+            <button class="button toast-order" type="button">Order online</button>
+            <a class="button hero-book" href="contact.html#book-an-event">Book an event</a>
           </div>
-        </div>
-        <div class="hero-art">
-          <img
-            class="hero-photo"
-            src="assets/images/menu/jerk-chicken.webp"
-            fetchpriority="high"
-            width="1200"
-            height="900"
-            alt="Jamaican jerk chicken on a ceramic plate"
-          />
-
-          <div class="hero-photo-label">
-            <span>THE JERK CHICKEN</span><span>Smoky. Spiced. Grilled.</span>
-          </div>
+          <a class="hero-location" href="contact.html">3395 Main St · Hartford, CT</a>
         </div>
       </section>
 
