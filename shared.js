@@ -2,6 +2,46 @@ import { catalog } from "./catalog.js";
 import { createDrinkBuilder } from "./drink-builder.js?v=20261001-new-drink-photos";
 import { addDrink, validPick, drinkSummary, selectedDrink } from "./drink-cart.js";
 const $ = (s) => document.querySelector(s);
+setupMobileNavigation();
+function setupMobileNavigation() {
+  const header = $(".site-header");
+  const toggle = header?.querySelector(".nav-toggle");
+  if (!toggle) return;
+  const mobile = window.matchMedia("(max-width: 760px)");
+  const setOpen = (open) => {
+    header.classList.toggle("nav-open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  };
+  toggle.addEventListener("click", () => {
+    setOpen(toggle.getAttribute("aria-expanded") !== "true");
+  });
+  header.addEventListener("click", (event) => {
+    if (event.target.closest("nav a, .toast-order")) setOpen(false);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && header.classList.contains("nav-open")) {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+  document.addEventListener("click", (event) => {
+    if (!header.contains(event.target)) setOpen(false);
+  });
+  header.addEventListener("focusout", (event) => {
+    if (!header.contains(event.relatedTarget)) setOpen(false);
+  });
+  mobile.addEventListener("change", () => {
+    const active = document.activeElement;
+    setOpen(false);
+    if (mobile.matches && header.contains(active) && active !== toggle && !active.closest(".brand")) {
+      toggle.focus();
+    } else if (!mobile.matches && active === toggle) {
+      header.querySelector("nav a").focus();
+    }
+  });
+  header.classList.add("nav-ready");
+}
 const esc = (s) =>
   String(s ?? "").replace(
     /[&<>"']/g,

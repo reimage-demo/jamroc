@@ -40,6 +40,10 @@ em { font-style: normal; color: var(--green); }
 .site-header nav a { display: inline-flex; align-items: center; min-height: 44px; position: relative; }
 .site-header nav a:hover, .site-header nav a[aria-current] { color: var(--green); }
 .site-header nav a[aria-current]::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--green); }
+.nav-toggle { display: none; align-items: center; justify-content: center; gap: 8px; min-width: 44px; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--green); font-size: 13px; font-weight: 600; }
+.nav-toggle:hover { background: var(--soft); }
+.nav-icon-close, .nav-open .nav-icon-open { display: none; }
+.nav-open .nav-icon-close { display: block; }
 .button { display: inline-flex; justify-content: center; align-items: center; gap: 22px; min-height: 50px; padding: 13px 22px; border: 1px solid var(--green); border-radius: 11px; background: var(--green); color: white; font-size: 14px; font-weight: 600; transition: background .2s; }
 .button:hover, .item-link:hover { background: var(--accent-hover); color: white; }
 .button.compact { min-height: 44px; padding: 10px 18px; font-size: 13px; }
@@ -203,6 +207,14 @@ dialog > p { color: var(--muted); }
   .brand small { font-size: 7px; }
   .site-header nav { order: 3; width: 100%; justify-content: space-between; gap: 12px; font-size: 12px; padding-bottom: 8px; }
   .site-header .button { font-size: 12px; padding: 10px 14px; }
+  .site-header.nav-ready { min-height: 80px; padding-block: 14px; }
+  .nav-ready .nav-toggle { display: inline-flex; margin-left: auto; }
+  .site-header.nav-ready nav, .site-header.nav-ready > .toast-order { display: none; }
+  .site-header.nav-open nav { display: flex; flex-direction: column; gap: 4px; padding: 12px 0 0; border-top: 1px solid var(--line); font-size: 15px; }
+  .site-header.nav-open nav a { min-height: 48px; padding: 10px 14px; border-radius: 8px; }
+  .site-header.nav-open nav a:hover, .site-header.nav-open nav a[aria-current] { background: var(--soft); }
+  .site-header.nav-open nav a[aria-current]::after { display: none; }
+  .site-header.nav-open > .toast-order { display: inline-flex; order: 4; width: 100%; min-height: 48px; font-size: 14px; }
   .hero { min-height: 0; padding: 124px 20px 190px; margin-bottom: 36px; }
   .hero-copy { width: 100%; max-width: 520px; }
   .hero h1 { font-size: clamp(38px, 8.8vw, 58px); }
