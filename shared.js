@@ -1,4 +1,4 @@
-import { catalog } from "./catalog.js?v=20261104-drinks";
+import { catalog } from "./catalog.js?v=20261105-drink-photos";
 import { renderEvents, eventsError } from "./events.js?v=20261105-events";
 import { createDrinkBuilder } from "./drink-builder.js?v=20261001-new-drink-photos";
 import { addDrink, validPick, drinkSummary, selectedDrink } from "./drink-cart.js";
@@ -58,6 +58,7 @@ const money = (n) =>
         style: "currency",
         currency: "USD",
       }).format(n / 100);
+const featuredDrinkSlugs = ["watermelon-splash", "rum-punch"];
 let data = catalog,
   settings = null,
   client = null,
@@ -215,8 +216,12 @@ function renderMenu() {
           )
           .sort((a, b) => a.sortOrder - b.sortOrder);
         const builder = kind === "drink" && c.slug === "cocktails" ? drinkBuilder.renderEntry(search) : "";
+        const featuredDrinks = kind === "drink"
+          ? featuredDrinkSlugs.map((slug) => items.find((item) => item.slug === slug)).filter(Boolean)
+          : [];
+        const remainingItems = items.filter((item) => !featuredDrinks.includes(item));
         if (search && !items.length && !builder) return "";
-        return `<section class="menu-section" id="${esc(c.slug)}"><h2>${esc(c.name)}</h2>${items.length || builder ? `<div class="menu-grid">${builder}${items.map((i) => card(i)).join("")}</div>` : `<p class="empty">${kind === "drink" ? "Our " + esc(c.name.toLowerCase()) + " selection is coming soon." : "This section is being updated."}</p>`}</section>`;
+        return `<section class="menu-section" id="${esc(c.slug)}"><h2>${esc(c.name)}</h2>${items.length || builder ? `<div class="menu-grid">${featuredDrinks.map((i) => card(i)).join("")}${builder}${remainingItems.map((i) => card(i)).join("")}</div>` : `<p class="empty">${kind === "drink" ? "Our " + esc(c.name.toLowerCase()) + " selection is coming soon." : "This section is being updated."}</p>`}</section>`;
       })
       .join("") || '<p class="empty">No matches. Try a different dish.</p>';
   $("#menu-notice").textContent = data.preview
@@ -405,7 +410,18 @@ async function connect() {
         "menu:publicMenu",
         {},
         (m) => {
-          data = m;
+          // Supply the new photos for existing live records that have no image yet.
+          data = {
+            ...m,
+            items: m.items.map((item) => {
+              const fallback = item.kind === "drink" && featuredDrinkSlugs.includes(item.slug)
+                ? catalog.items.find((entry) => entry.slug === item.slug)
+                : null;
+              return !item.imageUrl && fallback
+                ? { ...item, imageUrl: fallback.imageUrl, illustrative: true }
+                : item;
+            }),
+          };
           renderMenu();
         },
         connectionError,

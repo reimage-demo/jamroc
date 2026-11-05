@@ -1,4 +1,3 @@
-// Food and cocktail menu for Jam Roc.
 export const catalog = {
   "categories": [
     {
@@ -655,9 +654,10 @@ export const catalog = {
       "categorySlug": "cocktails",
       "published": false,
       "isAvailable": true,
-      "sortOrder": 10,
-      "illustrative": false,
-      "options": []
+      "sortOrder": -1,
+      "illustrative": true,
+      "options": [],
+      "imageUrl": "assets/images/menu/rum-punch.webp"
     },
     {
       "slug": "watermelon-splash",
@@ -667,9 +667,10 @@ export const catalog = {
       "categorySlug": "cocktails",
       "published": false,
       "isAvailable": true,
-      "sortOrder": 11,
-      "illustrative": false,
-      "options": []
+      "sortOrder": -2,
+      "illustrative": true,
+      "options": [],
+      "imageUrl": "assets/images/menu/watermelon-splash.webp"
     }
   ]
 };
