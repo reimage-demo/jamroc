@@ -1,4 +1,5 @@
-import { catalog } from "./catalog.js";
+import { catalog } from "./catalog.js?v=20261104-drinks";
+import { renderEvents, eventsError } from "./events.js?v=20261105-events";
 import { createDrinkBuilder } from "./drink-builder.js?v=20261001-new-drink-photos";
 import { addDrink, validPick, drinkSummary, selectedDrink } from "./drink-cart.js";
 const $ = (s) => document.querySelector(s);
@@ -357,6 +358,7 @@ function renderBoard() {
   }
 }
 function connectionError() {
+  if (page === "events") eventsError();
   if ($("#board-connection"))
     $("#board-connection").textContent =
       "Connection interrupted · updates may be delayed";
@@ -367,6 +369,7 @@ function connectionError() {
 async function connect() {
   const url = window.JAMROC_CONFIG?.convexUrl;
   if (!url) {
+    if (page === "events") eventsError();
     if ($("#board-connection"))
       $("#board-connection").textContent = "Online ordering coming soon";
     renderBoard();
@@ -408,6 +411,7 @@ async function connect() {
         connectionError,
       );
     }
+    if (page === "events") client.onUpdate("events:publicEvents", {}, renderEvents, eventsError);
     if (page === "status") {
       let nameTimer;
       let namesInFlight = false;

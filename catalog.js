@@ -1,4 +1,4 @@
-// Food and cocktail menu transcribed from Jam-Roc supplied menus.
+// Food and cocktail menu for Jam Roc.
 export const catalog = {
   "categories": [
     {
@@ -520,7 +520,7 @@ export const catalog = {
     {
       "slug": "knockout-punch",
       "name": "Knockout Punch",
-      "description": "We dare you.\nA bold blend of Jamaican rum and cognac, finished with ginger beer.\nIngredients: Wray & Nephew White Overproof Rum • Appleton Estate Signature • Hennessy VS • D’Ussé • Stoney Ginger Beer",
+      "description": "We dare you.\nA bold Jamaican rum with a ginger beer finish.\nIngredients: Wray & Nephew White Overproof Rum • Stoney Ginger Beer",
       "kind": "drink",
       "categorySlug": "cocktails",
       "published": false,
@@ -533,7 +533,7 @@ export const catalog = {
     {
       "slug": "yard-man",
       "name": "Yard Man",
-      "description": "Straight Jamaican attitude.\nJamaican white overproof and Appleton rum with a ginger beer finish.\nIngredients: Wray & Nephew White Overproof Rum • Appleton Estate Signature • Stoney Ginger Beer",
+      "description": "Straight Jamaican attitude.\nSmooth Jamaican rum with a ginger beer finish.\nIngredients: Appleton Estate Signature • Stoney Ginger Beer",
       "kind": "drink",
       "categorySlug": "cocktails",
       "published": false,
@@ -546,7 +546,7 @@ export const catalog = {
     {
       "slug": "island-after-dark",
       "name": "Island After Dark",
-      "description": "Sweet when it starts. Trouble when it finishes.\nWatermelon, red berry, and strawberry-grape spirits meet ginger beer.\nIngredients: Cîroc Summer Watermelon • Cîroc Red Berry • XXIV Strawberry Grape • Stoney Ginger Beer",
+      "description": "Sweet when it starts. Trouble when it finishes.\nWatermelon vodka with the lively spice of ginger beer.\nIngredients: Cîroc Summer Watermelon • Stoney Ginger Beer",
       "kind": "drink",
       "categorySlug": "cocktails",
       "published": false,
@@ -559,7 +559,7 @@ export const catalog = {
     {
       "slug": "mango-madness",
       "name": "Mango Madness",
-      "description": "Vacation in a glass.\nMango and peach spirits with the lively spice of ginger beer.\nIngredients: XXIV Mango • Cîroc Peach • Stoney Ginger Beer",
+      "description": "Vacation in a glass.\nMango spirit with the lively spice of ginger beer.\nIngredients: XXIV Mango • Stoney Ginger Beer",
       "kind": "drink",
       "categorySlug": "cocktails",
       "published": false,
@@ -572,7 +572,7 @@ export const catalog = {
     {
       "slug": "blue-island",
       "name": "Blue Island",
-      "description": "The drink everybody photographs.\nLuc Belaire Bleu paired with coconut vodka for a sparkling tropical mix.\nIngredients: Luc Belaire Bleu • Cîroc Coconut",
+      "description": "The drink everybody photographs.\nCoconut vodka with tropical pineapple juice.\nIngredients: Cîroc Coconut • Pineapple juice",
       "kind": "drink",
       "categorySlug": "cocktails",
       "published": false,
@@ -585,7 +585,7 @@ export const catalog = {
     {
       "slug": "bad-apple",
       "name": "Bad Apple",
-      "description": "Sweet. Smooth. Dangerous.\nApple whisky and coconut vodka topped with ginger beer.\nIngredients: Crown Royal Apple • Cîroc Coconut • Stoney Ginger Beer",
+      "description": "Sweet. Smooth. Dangerous.\nApple whisky topped with ginger beer.\nIngredients: Crown Royal Apple • Stoney Ginger Beer",
       "kind": "drink",
       "categorySlug": "cocktails",
       "published": false,
@@ -598,7 +598,7 @@ export const catalog = {
     {
       "slug": "kingston-knockout",
       "name": "Kingston Knockout",
-      "description": "Heavy hits. Island spirit.\nJamaican rums and VSOP cognacs brought together with ginger beer.\nIngredients: Wray & Nephew White Overproof Rum • Hennessy VSOP • Rémy Martin VSOP • Appleton Estate Signature • Stoney Ginger Beer",
+      "description": "Heavy hits. Island spirit.\nSmooth VSOP cognac with a ginger beer finish.\nIngredients: Hennessy VSOP • Stoney Ginger Beer",
       "kind": "drink",
       "categorySlug": "cocktails",
       "published": false,
@@ -611,7 +611,7 @@ export const catalog = {
     {
       "slug": "strawberry-sunset",
       "name": "Strawberry Sunset",
-      "description": "Easy to order. Hard to order just one.\nStrawberry-grape and red berry spirits with sparkling Belaire Bleu.\nIngredients: XXIV Strawberry Grape • Cîroc Red Berry • Belaire Bleu",
+      "description": "Easy to order. Hard to order just one.\nStrawberry-grape spirit with tropical pineapple juice.\nIngredients: XXIV Strawberry Grape • Pineapple juice",
       "kind": "drink",
       "categorySlug": "cocktails",
       "published": false,
@@ -624,7 +624,7 @@ export const catalog = {
     {
       "slug": "tequila-island",
       "name": "Tequila Island",
-      "description": "Mexico meets the Caribbean.\nBlanco and reposado tequilas paired with Jamaican ginger beer.\nIngredients: Don Julio Blanco • Casamigos Reposado • Stoney Ginger Beer",
+      "description": "Mexico meets the Caribbean.\nBlanco tequila paired with Jamaican ginger beer.\nIngredients: Don Julio Blanco • Stoney Ginger Beer",
       "kind": "drink",
       "categorySlug": "cocktails",
       "published": false,
@@ -637,7 +637,7 @@ export const catalog = {
     {
       "slug": "the-last-call",
       "name": "The Last Call",
-      "description": "One for the grown folks.\nCognac and Taylor Port with a ginger beer finish.\nIngredients: Hennessy VS • D’Ussé • Taylor Port • Stoney Ginger Beer",
+      "description": "One for the grown folks.\nCognac with a ginger beer finish.\nIngredients: Hennessy VS • Stoney Ginger Beer",
       "kind": "drink",
       "categorySlug": "cocktails",
       "published": false,
@@ -645,6 +645,30 @@ export const catalog = {
       "sortOrder": 9,
       "imageUrl": "assets/images/menu/the-last-call.webp",
       "illustrative": true,
+      "options": []
+    },
+    {
+      "slug": "rum-punch",
+      "name": "Rum Punch",
+      "description": "Jamaican rum with tropical juices and a touch of grenadine.\nIngredients: Appleton Estate Signature • Pineapple juice • Orange juice • Lime juice • Grenadine",
+      "kind": "drink",
+      "categorySlug": "cocktails",
+      "published": false,
+      "isAvailable": true,
+      "sortOrder": 10,
+      "illustrative": false,
+      "options": []
+    },
+    {
+      "slug": "watermelon-splash",
+      "name": "Watermelon Splash",
+      "description": "Cîroc with pineapple, grenadine, and a splash of ginger ale.\nIngredients: Cîroc • Pineapple • Grenadine • Splash of ginger ale",
+      "kind": "drink",
+      "categorySlug": "cocktails",
+      "published": false,
+      "isAvailable": true,
+      "sortOrder": 11,
+      "illustrative": false,
       "options": []
     }
   ]
