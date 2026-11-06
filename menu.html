@@ -56,10 +56,7 @@
             id="menu-search"
             type="search"
             placeholder="Find a favorite…"
-            aria-label="Search menu" /></label
-        ><button class="text-link" id="open-tray">
-          Cart <span id="tray-count">0</span>
-        </button>
+            aria-label="Search menu" /></label>
       </div>
       <div class="menu-layout">
         <aside
@@ -69,7 +66,7 @@
         ></aside>
         <div class="menu-content">
           <p id="menu-notice" class="notice" role="status">
-            Menu preview · Prices and online ordering coming soon.
+            Browse the menu here. Order through DoorDash or Grubhub for current prices and availability.
           </p>
           <div id="menu-sections"></div>
           <p class="menu-footnote">
@@ -81,17 +78,6 @@
       </div>
       <dialog id="drink-builder-dialog" class="drink-builder-dialog" aria-labelledby="builder-title"></dialog>
       <dialog id="item-dialog" class="item-dialog"></dialog>
-      <dialog id="tray-dialog">
-        <button class="dialog-close" aria-label="Close">×</button>
-
-        <h2>Your cart</h2>
-        <div id="tray-items"></div>
-        <p class="muted">
-          This list is for browsing. Orders and payments are placed on DoorDash or Grubhub;
-          cart items won’t transfer automatically.
-        </p>
-        <button class="button online-order">Order online</button>
-      </dialog>
     </main>
     <footer>
       <div class="footer-top">
@@ -123,10 +109,10 @@
         <a class="button order-doordash" href="https://order.online/en-US/store/jam-roc-restaurant-and-lounge-hartford-24902126">Order with DoorDash <span aria-hidden="true">↗</span></a>
         <a class="button order-grubhub" href="https://www.grubhub.com/restaurant/jam-roc-3395-main-st-hartford/7529496">Order with Grubhub <span aria-hidden="true">↗</span></a>
       </div>
-      <p class="ordering-note">You’ll complete your order on the service’s website. Prices, availability, and fees may differ. Your saved cart here won’t transfer.</p>
+      <p class="ordering-note">You’ll complete your order on the service’s website. Prices, availability, and fees may differ.</p>
     </dialog>
     <script src="public-config.js"></script>
     <script src="vendor/convex-client.js" defer></script>
-    <script type="module" src="shared.js?v=20261105-ordering"></script>
+    <script type="module" src="shared.js?v=20261105-external-ordering"></script>
   </body>
 </html>

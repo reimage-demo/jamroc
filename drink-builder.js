@@ -1,7 +1,7 @@
 import { drinkDefaults } from './drink-config.js';
 import { selectedDrink } from './drink-cart.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export function createDrinkBuilder({onSave}) {
+export function createDrinkBuilder() {
   const dialog = document.querySelector('#drink-builder-dialog');
   if (!dialog) return {update() {}, renderEntry() {return '';}};
   let config = drinkDefaults;
@@ -30,8 +30,8 @@ export function createDrinkBuilder({onSave}) {
     else if (step === 0) body = `<h3 id="builder-step" tabindex="-1">Choose your spirit</h3>${spiritChoices()}`;
     else if (step === 1) body = `<h3 id="builder-step" tabindex="-1">Choose your chaser</h3><fieldset class="builder-choices"><legend>Chaser</legend>${available('chasers').map(o => choice(o,'chaser')).join('')}</fieldset>`;
     else if (step === 2) body = `<h3 id="builder-step" tabindex="-1">Extras</h3>${available('extras').length ? `<fieldset class="builder-choices"><legend>Choose up to one extra</legend>${choice({id:'',name:'No extra'},'extra')}${available('extras').map(o => choice(o,'extra')).join('')}</fieldset>` : '<p>Standard drink. No extras available.</p>'}`;
-    else body = `<h3 id="builder-step" tabindex="-1">Your drink</h3>${drink ? `<dl class="drink-summary"><div><dt>Spirit</dt><dd>${esc(drink.spirit.name)}</dd></div><div><dt>Chaser</dt><dd>${esc(drink.chaser.name)}</dd></div><div><dt>Extra</dt><dd>${drink.extra ? esc(drink.extra.name) + ' · ' + esc(drink.extra.portion) : 'None'}</dd></div></dl><strong>Price coming soon</strong>` : '<p>Go back and choose an available spirit and chaser.</p>'}<p class="muted">Saving to your cart does not place an order.</p>`;
-    dialog.innerHTML = `<button type="button" class="dialog-close" aria-label="Close drink builder">×</button><header class="builder-header"><h2 id="builder-title">Build Your Own Drink</h2><p>Step ${step+1} of 4</p></header><ol class="builder-progress" aria-label="Drink builder steps">${steps.map((s,i)=>`<li ${i===step?'aria-current="step"':''}>${s}</li>`).join('')}</ol><div class="builder-content">${body}</div><p id="builder-error" class="builder-error" role="alert">${esc(error)}</p><div class="builder-actions">${step>0?'<button type="button" class="builder-back" data-builder-back>Back</button>':'<span></span>'}${canBuild()?`<button type="button" class="item-link" data-builder-next ${step===3&&!drink?'disabled':''}>${step===3?'Save to cart':'Next'}</button>`:''}</div>`;
+    else body = `<h3 id="builder-step" tabindex="-1">Your drink</h3>${drink ? `<dl class="drink-summary"><div><dt>Spirit</dt><dd>${esc(drink.spirit.name)}</dd></div><div><dt>Chaser</dt><dd>${esc(drink.chaser.name)}</dd></div><div><dt>Extra</dt><dd>${drink.extra ? esc(drink.extra.name) + ' · ' + esc(drink.extra.portion) : 'None'}</dd></div></dl><strong>Price coming soon</strong>` : '<p>Go back and choose an available spirit and chaser.</p>'}<p class="muted">This is a drink preview. Order through DoorDash or Grubhub and confirm available options there.</p>`;
+    dialog.innerHTML = `<button type="button" class="dialog-close" aria-label="Close drink builder">×</button><header class="builder-header"><h2 id="builder-title">Build Your Own Drink</h2><p>Step ${step+1} of 4</p></header><ol class="builder-progress" aria-label="Drink builder steps">${steps.map((s,i)=>`<li ${i===step?'aria-current="step"':''}>${s}</li>`).join('')}</ol><div class="builder-content">${body}</div><p id="builder-error" class="builder-error" role="alert">${esc(error)}</p><div class="builder-actions">${step>0?'<button type="button" class="builder-back" data-builder-back>Back</button>':'<span></span>'}${canBuild()?`<button type="button" class="item-link" data-builder-next ${step===3&&!drink?'disabled':''}>${step===3?'Done':'Next'}</button>`:''}</div>`;
     if (focus && dialog.open) dialog.querySelector('#builder-step')?.focus();
   }
   document.addEventListener('click', e => {
@@ -69,13 +69,8 @@ export function createDrinkBuilder({onSave}) {
       const drink = selectedDrink(config,selection);
       if (!drink) error='Your choices have changed. Review the available options.';
       else {
-        error=onSave(drink);
-        if (!error) {
-          dialog.close();
-          const feedback = document.querySelector('#builder-feedback');
-          if (feedback) feedback.textContent='Saved to cart.';
-          return;
-        }
+        dialog.close();
+        return;
       }
     } else {step++;error='';}
     if (error) {
@@ -86,7 +81,7 @@ export function createDrinkBuilder({onSave}) {
   return {
     renderEntry(search = '') {
       if (!config?.enabled || (search && !'build your own drink custom spirit chaser'.includes(search))) return '';
-      return `<article class="food-card drink-card" data-reveal-key="build-your-own-drink"><div class="food-photo"><button type="button" class="builder-photo" data-build-drink aria-label="Customize your drink" ${!canBuild()?'disabled':''}><img src="assets/images/menu/build-your-own-drink.webp?v=20261001-new-drink-photos" width="600" height="800" alt="Plain empty drinking glass" loading="lazy" decoding="async"></button></div><div class="food-info"><h3><button type="button" class="item-name" data-build-drink ${!canBuild()?'disabled':''}>Build Your Own Drink</button></h3><p>Choose a spirit and a chaser.</p><div class="price"><span>${canBuild()?'Price coming soon':'Currently unavailable'}</span><button type="button" class="item-link" data-build-drink ${!canBuild()?'disabled':''}>Customize</button></div><span id="builder-feedback" class="cart-feedback" role="status"></span></div></article>`;
+      return `<article class="food-card drink-card" data-reveal-key="build-your-own-drink"><div class="food-photo"><button type="button" class="builder-photo" data-build-drink aria-label="Customize your drink" ${!canBuild()?'disabled':''}><img src="assets/images/menu/build-your-own-drink.webp?v=20261001-new-drink-photos" width="600" height="800" alt="Plain empty drinking glass" loading="lazy" decoding="async"></button></div><div class="food-info"><h3><button type="button" class="item-name" data-build-drink ${!canBuild()?'disabled':''}>Build Your Own Drink</button></h3><p>Choose a spirit and a chaser.</p><div class="price"><span>${canBuild()?'Price coming soon':'Currently unavailable'}</span><button type="button" class="item-link" data-build-drink ${!canBuild()?'disabled':''}>Customize</button></div></div></article>`;
     },
     update(next) {
       config = next;
