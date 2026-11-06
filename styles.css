@@ -223,12 +223,12 @@ dialog > p { color: var(--muted); }
   .site-header .button { font-size: 12px; padding: 10px 14px; }
   .site-header.nav-ready { min-height: 80px; padding-block: 14px; }
   .nav-ready .nav-toggle { display: inline-flex; margin-left: auto; }
-  .site-header.nav-ready nav, .site-header.nav-ready > .toast-order { display: none; }
+  .site-header.nav-ready nav, .site-header.nav-ready > .online-order { display: none; }
   .site-header.nav-open nav { display: flex; flex-direction: column; gap: 4px; padding: 12px 0 0; border-top: 1px solid var(--line); font-size: 15px; }
   .site-header.nav-open nav a { min-height: 48px; padding: 10px 14px; border-radius: 8px; }
   .site-header.nav-open nav a:hover, .site-header.nav-open nav a[aria-current] { background: var(--soft); }
   .site-header.nav-open nav a[aria-current]::after { display: none; }
-  .site-header.nav-open > .toast-order { display: inline-flex; order: 4; width: 100%; min-height: 48px; font-size: 14px; }
+  .site-header.nav-open > .online-order { display: inline-flex; order: 4; width: 100%; min-height: 48px; font-size: 14px; }
   .hero { min-height: 0; padding: 124px 20px 190px; margin-bottom: 36px; }
   .hero-copy { width: 100%; max-width: 520px; }
   .hero h1 { font-size: clamp(38px, 8.8vw, 58px); }
@@ -371,3 +371,11 @@ dialog > p { color: var(--muted); }
   .event-poster img { height: auto; max-height: 460px; }
   .event-copy { padding: 22px; }
 }
+
+.ordering-options { display: grid; gap: 12px; margin: 28px 0 20px; }
+.ordering-options .button { min-height: 58px; justify-content: space-between; font-size: 16px; padding: 16px 22px; }
+.ordering-options .order-doordash { background: #c82b20; border-color: #c82b20; color: #fff; }
+.ordering-options .order-doordash:hover { background: #a51e16; border-color: #a51e16; }
+.ordering-options .order-grubhub { background: #245c43; border-color: #245c43; color: #fff; }
+.ordering-options .order-grubhub:hover { background: #194631; border-color: #194631; }
+.ordering-note { font-size: 13px; line-height: 1.7; margin-bottom: 0; }

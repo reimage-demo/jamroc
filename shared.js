@@ -18,7 +18,7 @@ function setupMobileNavigation() {
     setOpen(toggle.getAttribute("aria-expanded") !== "true");
   });
   header.addEventListener("click", (event) => {
-    if (event.target.closest("nav a, .toast-order")) setOpen(false);
+    if (event.target.closest("nav a, .online-order")) setOpen(false);
   });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && header.classList.contains("nav-open")) {
@@ -137,10 +137,8 @@ function openDialog(el) {
 }
 document.addEventListener("click", (e) => {
   if (e.target.closest(".dialog-close")) e.target.closest("dialog").close();
-  if (e.target.closest(".toast-order")) {
-    if (settings?.orderingEnabled && validToast(settings.toastOrderingUrl))
-      window.location.assign(settings.toastOrderingUrl);
-    else openDialog($("#ordering-dialog"));
+  if (e.target.closest(".online-order")) {
+    openDialog($("#ordering-dialog"));
   }
 });
 for (const d of document.querySelectorAll("dialog"))
@@ -156,19 +154,6 @@ for (const d of document.querySelectorAll("dialog"))
         d.close();
     }
   });
-function validToast(value) {
-  try {
-    const u = new URL(value);
-    return (
-      u.protocol === "https:" &&
-      !u.username &&
-      !u.password &&
-      (u.hostname === "toasttab.com" || u.hostname.endsWith(".toasttab.com"))
-    );
-  } catch {
-    return false;
-  }
-}
 function imageUrl(value) {
   return /^assets\/images\/menu\/[a-z0-9-]+\.webp$/.test(value || "") ||
     /^https:\/\//.test(value || "")
@@ -177,8 +162,8 @@ function imageUrl(value) {
 }
 function displayImage(item) {
   const url = imageUrl(item.imageUrl);
-  return item.kind === "drink" && url.startsWith("assets/images/menu/")
-    ? url + "?v=20261001-new-drink-photos"
+  return url.startsWith("assets/images/menu/")
+    ? url + "?v=20261105-restaurant-photos"
     : url;
 }
 function card(item, featured = false) {
@@ -224,13 +209,7 @@ function renderMenu() {
         return `<section class="menu-section" id="${esc(c.slug)}"><h2>${esc(c.name)}</h2>${items.length || builder ? `<div class="menu-grid">${featuredDrinks.map((i) => card(i)).join("")}${builder}${remainingItems.map((i) => card(i)).join("")}</div>` : `<p class="empty">${kind === "drink" ? "Our " + esc(c.name.toLowerCase()) + " selection is coming soon." : "This section is being updated."}</p>`}</section>`;
       })
       .join("") || '<p class="empty">No matches. Try a different dish.</p>';
-  $("#menu-notice").textContent = data.preview
-    ? "Menu preview · Prices and online ordering coming soon."
-    : client
-      ? settings?.orderingEnabled
-        ? "Browse here. Place and pay for your order on Toast."
-        : "Online ordering is coming soon. Browse our current menu below."
-      : "Menu preview · Prices and online ordering coming soon.";
+  $("#menu-notice").textContent = "Browse the menu here. Order through DoorDash or Grubhub for current prices and availability.";
   refreshScrollReveals();
 }
 document.addEventListener("click", (e) => {
@@ -266,10 +245,10 @@ function showItem(item) {
   if (!item) return;
   const d = $("#item-dialog");
   d.classList.toggle("drink-detail", item.kind === "drink");
-  d.innerHTML = `<button class="dialog-close" aria-label="Close">×</button>${imageUrl(item.imageUrl) ? `<img src="${esc(displayImage(item))}" width="650" height="480" alt="${esc(item.name)}">` : ""}<div class="item-detail"><p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name)}</p><h2>${esc(item.name)}</h2><p>${esc(item.description)}</p><p><strong>${money(item.price)}</strong></p>${item.options?.length ? `<label>Preparation<select id="preparation">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<button class="button" id="add-pick" ${!item.isAvailable ? "disabled" : ""}>${item.isAvailable ? "Add to cart" : "Currently unavailable"}</button><p class="muted">Save your favorites while you browse. Checkout takes place on Toast.</p>${item.illustrative ? '<p class="muted">Illustrative photograph.</p>' : ""}</div>`;
+  d.innerHTML = `<button class="dialog-close" aria-label="Close">×</button>${imageUrl(item.imageUrl) ? `<img src="${esc(displayImage(item))}" width="650" height="480" alt="${esc(item.name)}">` : ""}<div class="item-detail"><p class="item-category">${esc(data.categories.find((c) => c.slug === item.categorySlug)?.name)}</p><h2>${esc(item.name)}</h2><p>${esc(item.description)}</p><p><strong>${money(item.price)}</strong></p>${item.options?.length ? `<label>Preparation<select id="preparation">${item.options.map((o) => `<option>${esc(o.name)}</option>`).join("")}</select></label>` : ""}<button class="button" id="add-pick" ${!item.isAvailable ? "disabled" : ""}>${item.isAvailable ? "Add to cart" : "Currently unavailable"}</button><p class="muted">Save your favorites while you browse. Order through DoorDash or Grubhub; saved items do not transfer.</p>${item.illustrative ? '<p class="muted">AI-enhanced or illustrative image. Actual presentation may vary.</p>' : ""}</div>`;
   d.querySelector("#preparation")?.addEventListener("change", (e) => {
     const o = item.options.find((o) => o.name === e.target.value);
-    if (imageUrl(o?.imageUrl)) d.querySelector("img").src = o.imageUrl;
+    if (imageUrl(o?.imageUrl)) d.querySelector("img").src = displayImage(o);
   });
   d.querySelector("#add-pick").onclick = () => {
     const option = d.querySelector("select")?.value || "";

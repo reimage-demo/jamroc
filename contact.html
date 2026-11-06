@@ -10,7 +10,7 @@
     />
     <title>Visit Jam Roc | Jam Roc Restaurant & Lounge</title>
     <link rel="icon" href="assets/brand/logo.webp" />
-    <link rel="stylesheet" href="styles.css?v=20261105-legal" />
+    <link rel="stylesheet" href="styles.css?v=20261105-ordering" />
   </head>
   <body data-page="contact">
     <a class="skip" href="#main">Skip to content</a>
@@ -37,7 +37,7 @@
         ><a href="order-status.html" data-nav="status">Order status</a
         ><a href="contact.html" data-nav="contact">Visit us</a>
       </nav>
-      <button class="button compact toast-order">Order online</button>
+      <button class="button compact online-order">Order online</button>
     </header>
     <main id="main">
       <section class="page-heading">
@@ -71,7 +71,7 @@
         </div>
         <div class="contact-art">
           <img
-            src="assets/images/menu/escovitch-red-snapper.webp"
+            src="assets/images/menu/escovitch-red-snapper.webp?v=20261105-restaurant-photos"
             width="900"
             height="675"
             alt="Whole escovitch red snapper from the Jam Roc kitchen"
@@ -103,23 +103,24 @@
       <div class="footer-bottom">
         <span>© <span id="year"></span> Jam Roc Restaurant & Lounge</span
         ><span
-          >AI-generated food &amp; drink imagery. Actual presentation may vary.</span
+          >AI-enhanced and illustrative imagery. Actual presentation may vary.</span
         >
       </div>
       <p class="footer-credit"><span>Powered by</span> <a href="https://reimagebs.com"><strong>REIMAGE BUSINESS SOLUTIONS</strong></a></p>
     </footer>
-    <dialog id="ordering-dialog">
-      <button class="dialog-close" aria-label="Close">×</button>
-
-      <h2>Online ordering is coming soon</h2>
-      <p>
-        Online ordering will be available here soon. In the meantime, explore
-        our food menu.
-      </p>
-      <a class="button" href="menu.html">Explore the menu</a>
+    <dialog id="ordering-dialog" aria-labelledby="ordering-title" aria-describedby="ordering-description">
+      <button class="dialog-close" type="button" aria-label="Close ordering options">×</button>
+      <p class="eyebrow">Your favorites, your way</p>
+      <h2 id="ordering-title">Choose how to order.</h2>
+      <p id="ordering-description">Order pickup or delivery through your preferred service.</p>
+      <div class="ordering-options">
+        <a class="button order-doordash" href="https://order.online/en-US/store/jam-roc-restaurant-and-lounge-hartford-24902126">Order with DoorDash <span aria-hidden="true">↗</span></a>
+        <a class="button order-grubhub" href="https://www.grubhub.com/restaurant/jam-roc-3395-main-st-hartford/7529496">Order with Grubhub <span aria-hidden="true">↗</span></a>
+      </div>
+      <p class="ordering-note">You’ll complete your order on the service’s website. Prices, availability, and fees may differ. Your saved cart here won’t transfer.</p>
     </dialog>
     <script src="public-config.js"></script>
     <script src="vendor/convex-client.js" defer></script>
-    <script type="module" src="shared.js?v=20261105-events"></script>
+    <script type="module" src="shared.js?v=20261105-ordering"></script>
   </body>
 </html>
