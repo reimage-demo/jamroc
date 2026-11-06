@@ -382,7 +382,7 @@ dialog > p { color: var(--muted); }
 }
 
 .ordering-options { display: grid; gap: 12px; margin: 28px 0 20px; }
-.ordering-options .button { min-height: 58px; justify-content: space-between; font-size: 16px; padding: 16px 22px; }
+.ordering-options .button { min-height: 58px; justify-content: center; font-size: 16px; padding: 16px 22px; }
 .ordering-options .order-doordash { background: #c82b20; border-color: #c82b20; color: #fff; }
 .ordering-options .order-doordash:hover { background: #a51e16; border-color: #a51e16; }
 .ordering-options .order-grubhub { background: #245c43; border-color: #245c43; color: #fff; }
