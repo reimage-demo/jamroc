@@ -32,7 +32,7 @@ h1 { margin: 12px 0 5px; font-size: clamp(2.4rem, 10vw, 2.8rem); line-height: 1.
   padding: 16px 22px;
   border: 1px solid #d2ded5;
   border-bottom: 3px solid #b8cbbd;
-  border-radius: 6px;
+  border-radius: 9999px;
   background: #fff;
   text-decoration: none;
   font-size: 16px;

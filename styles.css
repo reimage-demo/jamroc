@@ -11,6 +11,7 @@
   --body: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --heading: var(--body);
   --radius: 20px;
+  --button-radius: 9999px;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 120px; }
@@ -40,11 +41,11 @@ em { font-style: normal; color: var(--green); }
 .site-header nav a { display: inline-flex; align-items: center; min-height: 44px; position: relative; }
 .site-header nav a:hover, .site-header nav a[aria-current] { color: var(--green); }
 .site-header nav a[aria-current]::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--green); }
-.nav-toggle { display: none; align-items: center; justify-content: center; gap: 8px; min-width: 44px; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--green); font-size: 13px; font-weight: 600; }
+.nav-toggle { display: none; align-items: center; justify-content: center; gap: 8px; min-width: 44px; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--button-radius); background: var(--paper); color: var(--green); font-size: 13px; font-weight: 600; }
 .nav-toggle:hover { background: var(--soft); }
 .nav-icon-close, .nav-open .nav-icon-open { display: none; }
 .nav-open .nav-icon-close { display: block; }
-.button { display: inline-flex; justify-content: center; align-items: center; gap: 22px; min-height: 50px; padding: 13px 22px; border: 1px solid var(--green); border-radius: 11px; background: var(--green); color: white; font-size: 14px; font-weight: 600; transition: background .2s; }
+.button { display: inline-flex; justify-content: center; align-items: center; gap: 22px; min-height: 50px; padding: 13px 22px; border: 1px solid var(--green); border-radius: var(--button-radius); background: var(--green); color: white; font-size: 14px; font-weight: 600; transition: background .2s; }
 .button:hover, .item-link:hover { background: var(--accent-hover); color: white; }
 .button.compact { min-height: 44px; padding: 10px 18px; font-size: 13px; }
 .button-light { background: white; color: var(--green); border-color: var(--line); }
@@ -88,7 +89,7 @@ em { font-style: normal; color: var(--green); }
 .item-name { font: inherit; color: inherit; text-align: left; background: none; border: 0; padding: 0; }
 .item-name:hover { color: var(--green); }
 .price { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; border-top: 1px solid var(--line); padding-top: 16px; margin-top: auto; font-size: 12px; color: var(--muted); }
-.item-link { padding: 8px 14px; min-height: 44px; border: 1px solid var(--line); border-radius: 9px; background: white; color: var(--green); font-size: 12px; font-weight: 600; }
+.item-link { padding: 8px 14px; min-height: 44px; border: 1px solid var(--line); border-radius: var(--button-radius); background: white; color: var(--green); font-size: 12px; font-weight: 600; }
 .card-preparation { font-size: 12px; margin-bottom: 16px; }
 .card-preparation select, .item-detail select { display: block; width: 100%; margin-top: 6px; min-height: 44px; padding: 8px 12px; background: white; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); }
 .split-callout { width: min(1200px, 90%); margin: 16px auto 72px; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; border: 1px solid var(--line); border-radius: 24px; }
@@ -143,14 +144,14 @@ footer { padding: 48px max(5%, calc((100% - 1200px)/2)) 24px; border-top: 1px so
 .page-heading h1 { margin-bottom: 18px; }
 .page-heading > p:not(.eyebrow) { color: var(--muted); max-width: 580px; }
 .menu-toolbar { display: flex; align-items: center; gap: 24px; width: min(1200px, 90%); margin: auto; padding: 18px 0; border-bottom: 1px solid var(--line); }
-.segmented { display: flex; gap: 4px; padding: 4px; background: var(--soft); border-radius: 12px; }
-.segmented button { min-height: 44px; padding: 10px 28px; border: 0; border-radius: 9px; color: var(--muted); background: transparent; font-size: 14px; font-weight: 600; }
+.segmented { display: flex; gap: 4px; padding: 4px; background: var(--soft); border-radius: var(--button-radius); }
+.segmented button { min-height: 44px; padding: 10px 28px; border: 0; border-radius: var(--button-radius); color: var(--muted); background: transparent; font-size: 14px; font-weight: 600; }
 .segmented .selected { color: white; background: var(--green); }
 .search { margin-left: auto; }
 .search input { width: 250px; min-height: 46px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); background: white; font-size: 14px; }
 .menu-layout { width: min(1200px, 90%); margin: auto; padding: 32px 0 64px; display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 40px; }
 .category-nav { display: flex; flex-direction: column; gap: 6px; position: sticky; top: 24px; align-self: start; }
-.category-nav a { padding: 11px 14px; font-size: 13px; min-height: 44px; border-radius: 9px; color: var(--muted); }
+.category-nav a { padding: 11px 14px; font-size: 13px; min-height: 44px; border-radius: var(--button-radius); color: var(--muted); }
 .category-nav a:hover { color: var(--green); background: var(--soft); }
 .menu-section { margin-bottom: 44px; scroll-margin-top: 24px; }
 .menu-section > h2 { font-size: 28px; padding: 8px 0 20px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
@@ -342,7 +343,7 @@ dialog > p { color: var(--muted); }
 .builder-choice small { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; }
 .builder-choice:has(input:checked) { color: var(--green); font-weight: 700; }
 .builder-actions { display: flex; justify-content: space-between; align-items: center; gap: 20px; border-top: 1px solid var(--line); padding-top: 20px; }
-.builder-back { background: white; color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 10px 18px; min-height: 44px; }
+.builder-back { background: white; color: var(--ink); border: 1px solid var(--line); border-radius: var(--button-radius); padding: 10px 18px; min-height: 44px; }
 .builder-error { color: var(--ink); font-size: 14px; margin: 16px 0; }
 .builder-error:empty { height: 8px; margin: 12px 0; }
 .drink-summary { margin: 0 0 24px; }
